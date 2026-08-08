@@ -10,7 +10,11 @@ export function ok<T>(data: T, message = 'OK'): Response {
 	return json(body);
 }
 
-export function fail<T = null>(code: ApiResponse<T>['code'], message: string, data: T | null = null): Response {
+export function fail<T = null>(
+	code: ApiResponse<T>['code'],
+	message: string,
+	data: T | null = null
+): Response {
 	const body: ApiResponse<T> = { code, message, data };
 	return json(body, { status: statusFromCode(code) });
 }

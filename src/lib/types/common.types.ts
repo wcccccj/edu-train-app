@@ -4,7 +4,15 @@
 
 /** 统一 API 响应包装 */
 export interface ApiResponse<T> {
-	code: 'OK' | 'UNAUTHORIZED' | 'FORBIDDEN' | 'NOT_FOUND' | 'CONFLICT' | 'LOCKED' | 'BAD_REQUEST' | 'ERROR';
+	code:
+		| 'OK'
+		| 'UNAUTHORIZED'
+		| 'FORBIDDEN'
+		| 'NOT_FOUND'
+		| 'CONFLICT'
+		| 'LOCKED'
+		| 'BAD_REQUEST'
+		| 'ERROR';
 	message: string;
 	data: T | null;
 }

@@ -1,9 +1,9 @@
 /**
  * 课程内存数据存储
- * 冷启动时种子化 ~30 门课程，支持按 ID 查找与列表查询
+ * 冷启动时种子化 28 门精选课程，支持按 ID 查找与列表查询
  */
 import type { Course } from '$lib/types/course.types';
-import { generateCourses } from '../generators/course.generator';
+import { SEED_COURSES } from '../data/courses.data';
 
 class CourseStore {
 	private data: Map<number, Course> = new Map();
@@ -13,8 +13,7 @@ class CourseStore {
 	}
 
 	private seed(): void {
-		const list = generateCourses(30);
-		for (const c of list) this.data.set(c.id, c);
+		for (const c of SEED_COURSES) this.data.set(c.id, c);
 	}
 
 	findById(id: number): Course | null {

@@ -21,6 +21,17 @@ class UserStore {
 		return this.data.get(id) ?? null;
 	}
 
+	findByName(name: string): User | null {
+		for (const user of this.data.values()) {
+			if (user.name === name) return user;
+		}
+		return null;
+	}
+
+	add(user: User): void {
+		this.data.set(user.id, user);
+	}
+
 	listAll(): User[] {
 		return Array.from(this.data.values());
 	}

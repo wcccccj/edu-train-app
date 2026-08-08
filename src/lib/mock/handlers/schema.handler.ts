@@ -6,8 +6,8 @@ import type { FormSchema } from '$lib/types/form.types';
 import { safetySchema, managementSchema } from '$lib/schemas';
 
 const SCHEMAS: Record<string, FormSchema> = {
-	'安全管理': safetySchema,
-	'管理能力': managementSchema
+	安全管理: safetySchema,
+	管理能力: managementSchema
 };
 
 export function getSchema(category: string): FormSchema | null {

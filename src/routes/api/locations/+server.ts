@@ -15,6 +15,12 @@ export const GET: RequestHandler = async ({ url }) => {
 		return fail('BAD_REQUEST', 'invalid courseId');
 	}
 	const locations = locationStore.listByCourse(courseId);
-	logRequest('GET', url.pathname + url.search, 200, Date.now() - start, `count=${locations.length}`);
+	logRequest(
+		'GET',
+		url.pathname + url.search,
+		200,
+		Date.now() - start,
+		`count=${locations.length}`
+	);
 	return ok(locations);
 };

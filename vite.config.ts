@@ -22,6 +22,12 @@ export default defineConfig({
 	],
 	test: {
 		expect: { requireAssertions: true },
+		coverage: {
+			provider: 'v8',
+			reporter: ['text', 'html', 'lcov'],
+			include: ['src/lib/**/*.ts', 'src/lib/**/*.svelte'],
+			exclude: ['src/lib/**/*.{test,spec}.{ts,js}', 'src/lib/mock/**', 'src/lib/vitest-examples/**']
+		},
 		projects: [
 			{
 				extends: './vite.config.ts',
@@ -38,10 +44,10 @@ export default defineConfig({
 			},
 
 			{
-				extends: './vite.config.ts',
+				extends: './vite.tests-dom.config.ts',
 				test: {
 					name: 'server',
-					environment: 'node',
+					environment: 'happy-dom',
 					include: ['src/**/*.{test,spec}.{js,ts}'],
 					exclude: ['src/**/*.svelte.{test,spec}.{js,ts}']
 				}

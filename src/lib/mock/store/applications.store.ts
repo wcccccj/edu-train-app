@@ -1,10 +1,24 @@
 /**
  * 申请记录内存数据存储
+ * 冷启动时基于预生成的用户与课程种子化 ~40 条申请记录，
+ * 使统计报表（KPI / 部门分布）有真实可展示数据
  */
 import type { Application } from '$lib/types/application.types';
+import { generateApplications } from '../generators/application.generator';
+import { userStore } from './users.store';
+import { courseStore } from './courses.store';
 
 class ApplicationStore {
 	private readonly data = new Map<string, Application>();
+
+	constructor() {
+		this.seed();
+	}
+
+	private seed(): void {
+		const apps = generateApplications(userStore.listAll(), courseStore.listAll());
+		for (const a of apps) this.data.set(a.id, a);
+	}
 
 	listAll(): Application[] {
 		return Array.from(this.data.values());
@@ -25,7 +39,12 @@ class ApplicationStore {
 	update(id: string, patch: Partial<Application>): Application | null {
 		const existing = this.data.get(id);
 		if (!existing) return null;
-		const updated: Application = { ...existing, ...patch, id: existing.id, userId: existing.userId };
+		const updated: Application = {
+			...existing,
+			...patch,
+			id: existing.id,
+			userId: existing.userId
+		};
 		this.data.set(id, updated);
 		return updated;
 	}

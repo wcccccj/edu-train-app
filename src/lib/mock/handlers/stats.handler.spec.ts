@@ -35,14 +35,14 @@ describe('stats.handler', () => {
 
 	it('should aggregate global charts correctly', () => {
 		const stats = getStatsOverview('user-1');
-		
+
 		// 课程热度（按 enrolled 降序）
 		expect(stats.courseRanking[0].courseId).toBe(2);
 		expect(stats.courseRanking[0].enrolled).toBe(20);
-		
+
 		// 培训类型分布
-		expect(stats.typeDistribution.find(t => t.type === 'offline')?.count).toBe(20);
-		
+		expect(stats.typeDistribution.find((t) => t.type === 'offline')?.count).toBe(20);
+
 		// 部门参与情况 (IT 2人次, HR 1人次)
 		expect(stats.departmentDistribution[0].department).toBe('IT');
 		expect(stats.departmentDistribution[0].count).toBe(2);

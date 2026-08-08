@@ -22,7 +22,7 @@ describe('locationStore CAS tryEnroll', () => {
 		const res = await locationStore.tryEnroll(courseId, locId, 5);
 		expect(res.ok).toBe(true);
 		expect(res.current?.enrolled).toBe(6);
-		
+
 		const verify = locationStore.findById(courseId, locId);
 		expect(verify?.enrolled).toBe(6);
 	});
@@ -48,16 +48,16 @@ describe('locationStore CAS tryEnroll', () => {
 		// 模拟两个并发的报名请求，都认为当前 enrolled 是 5
 		const p1 = locationStore.tryEnroll(courseId, locId, 5);
 		const p2 = locationStore.tryEnroll(courseId, locId, 5);
-		
+
 		const [res1, res2] = await Promise.all([p1, p2]);
-		
+
 		// 必然是一个成功，一个 CAS 冲突失败
-		const successCount = [res1, res2].filter(r => r.ok).length;
-		const conflictCount = [res1, res2].filter(r => !r.ok && r.reason === 'cas_conflict').length;
-		
+		const successCount = [res1, res2].filter((r) => r.ok).length;
+		const conflictCount = [res1, res2].filter((r) => !r.ok && r.reason === 'cas_conflict').length;
+
 		expect(successCount).toBe(1);
 		expect(conflictCount).toBe(1);
-		
+
 		const verify = locationStore.findById(courseId, locId);
 		expect(verify?.enrolled).toBe(6); // 最终只增加了 1
 	});

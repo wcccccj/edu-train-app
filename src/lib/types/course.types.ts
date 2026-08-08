@@ -13,6 +13,20 @@ export interface Location {
 	enrolled: number;
 }
 
+export interface CourseExtraFieldOption {
+	label: string;
+	value: string;
+}
+
+/** 特殊活动课程需额外填写的字段（如选择部门、选择岗位） */
+export interface CourseExtraField {
+	name: string;
+	label: string;
+	type: 'text' | 'select';
+	required?: boolean;
+	options?: CourseExtraFieldOption[];
+}
+
 export interface Course {
 	id: number;
 	name: string;
@@ -29,6 +43,8 @@ export interface Course {
 	description: string;
 	locations: Location[];
 	timeSlots: string[];
+	/** 特殊活动课程的额外填写项（可选） */
+	extraFields?: CourseExtraField[];
 }
 
 /** 课程列表查询参数 */

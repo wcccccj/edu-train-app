@@ -7,14 +7,80 @@ describe('course.handler', () => {
 	beforeEach(() => {
 		// Mock store data for predictable tests
 		const mockCourses: Course[] = [
-			{ id: 1, name: 'Svelte 基础', type: 'online', status: 'open', enrolled: 10, description: 'Svelte 入门', category: '前端', startDate: '', endDate: '', duration: '', instructor: '', price: 0, maxStudents: 50, locations: [], timeSlots: [] },
-			{ id: 2, name: 'React 进阶', type: 'offline', status: 'full', enrolled: 50, description: '深入 React', category: '前端', startDate: '', endDate: '', duration: '', instructor: '', price: 0, maxStudents: 50, locations: [], timeSlots: [] },
-			{ id: 3, name: 'Vue 实战', type: 'hybrid', status: 'open', enrolled: 20, description: 'Vue 3 项目', category: '前端', startDate: '', endDate: '', duration: '', instructor: '', price: 0, maxStudents: 50, locations: [], timeSlots: [] },
-			{ id: 4, name: 'Node 后端', type: 'online', status: 'closed', enrolled: 30, description: 'Node.js 服务', category: '后端', startDate: '', endDate: '', duration: '', instructor: '', price: 0, maxStudents: 50, locations: [], timeSlots: [] }
+			{
+				id: 1,
+				name: 'Svelte 基础',
+				type: 'online',
+				status: 'open',
+				enrolled: 10,
+				description: 'Svelte 入门',
+				category: '前端',
+				startDate: '',
+				endDate: '',
+				duration: '',
+				instructor: '',
+				price: 0,
+				maxStudents: 50,
+				locations: [],
+				timeSlots: []
+			},
+			{
+				id: 2,
+				name: 'React 进阶',
+				type: 'offline',
+				status: 'full',
+				enrolled: 50,
+				description: '深入 React',
+				category: '前端',
+				startDate: '',
+				endDate: '',
+				duration: '',
+				instructor: '',
+				price: 0,
+				maxStudents: 50,
+				locations: [],
+				timeSlots: []
+			},
+			{
+				id: 3,
+				name: 'Vue 实战',
+				type: 'hybrid',
+				status: 'open',
+				enrolled: 20,
+				description: 'Vue 3 项目',
+				category: '前端',
+				startDate: '',
+				endDate: '',
+				duration: '',
+				instructor: '',
+				price: 0,
+				maxStudents: 50,
+				locations: [],
+				timeSlots: []
+			},
+			{
+				id: 4,
+				name: 'Node 后端',
+				type: 'online',
+				status: 'closed',
+				enrolled: 30,
+				description: 'Node.js 服务',
+				category: '后端',
+				startDate: '',
+				endDate: '',
+				duration: '',
+				instructor: '',
+				price: 0,
+				maxStudents: 50,
+				locations: [],
+				timeSlots: []
+			}
 		];
-		
+
 		vi.spyOn(courseStore, 'listAll').mockReturnValue(mockCourses);
-		vi.spyOn(courseStore, 'findById').mockImplementation((id) => mockCourses.find(c => c.id === id) ?? null);
+		vi.spyOn(courseStore, 'findById').mockImplementation(
+			(id) => mockCourses.find((c) => c.id === id) ?? null
+		);
 	});
 
 	it('should return paginated list', () => {
@@ -52,7 +118,7 @@ describe('course.handler', () => {
 	it('should get single course by id', () => {
 		const course = getCourse(2);
 		expect(course?.name).toBe('React 进阶');
-		
+
 		const notFound = getCourse(999);
 		expect(notFound).toBeNull();
 	});
