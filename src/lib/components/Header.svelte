@@ -80,7 +80,10 @@
 <header class="sticky top-0 z-30 border-b border-slate-200 bg-slate-50">
 	<div class="mx-auto flex h-16 max-w-[1600px] items-center gap-4 px-6 text-sm">
 		<!-- Logo -->
-		<a href={resolve('/courses')} class="flex shrink-0 cursor-pointer items-center gap-2 text-blue-600 hover:text-blue-700 transition-colors">
+		<a
+			href={resolve('/courses')}
+			class="flex shrink-0 cursor-pointer items-center gap-2 text-blue-600 transition-colors hover:text-blue-700"
+		>
 			<svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
 				<path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
 			</svg>
@@ -88,23 +91,35 @@
 		</a>
 
 		<!-- Desktop Navigation Links -->
-		<nav class="hidden md:flex items-center gap-6 ml-4">
-			<a 
-				href={resolve('/courses')} 
-				class="text-slate-600 hover:text-blue-600 transition-colors font-medium {$page.url.pathname.startsWith('/courses') ? 'text-blue-600' : ''}"
+		<nav class="ml-4 hidden items-center gap-6 md:flex">
+			<a
+				href={resolve('/courses')}
+				class="font-medium text-slate-600 transition-colors hover:text-blue-600 {$page.url.pathname.startsWith(
+					'/courses'
+				)
+					? 'text-blue-600'
+					: ''}"
 			>
 				课程列表
 			</a>
 			{#if authStore.isAuthenticated}
-				<a 
-					href={resolve('/enrollments')} 
-					class="text-slate-600 hover:text-blue-600 transition-colors font-medium {$page.url.pathname.startsWith('/enrollments') ? 'text-blue-600' : ''}"
+				<a
+					href={resolve('/enrollments')}
+					class="font-medium text-slate-600 transition-colors hover:text-blue-600 {$page.url.pathname.startsWith(
+						'/enrollments'
+					)
+						? 'text-blue-600'
+						: ''}"
 				>
 					报名信息
 				</a>
-				<a 
-					href={resolve('/reports')} 
-					class="text-slate-600 hover:text-blue-600 transition-colors font-medium {$page.url.pathname.startsWith('/reports') ? 'text-blue-600' : ''}"
+				<a
+					href={resolve('/reports')}
+					class="font-medium text-slate-600 transition-colors hover:text-blue-600 {$page.url.pathname.startsWith(
+						'/reports'
+					)
+						? 'text-blue-600'
+						: ''}"
 				>
 					统计报表
 				</a>
@@ -125,7 +140,12 @@
 				aria-label="搜索"
 			>
 				<svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						stroke-width="2"
+						d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+					></path>
 				</svg>
 			</button>
 
@@ -149,7 +169,9 @@
 							>
 								{authStore.currentUser?.name}
 								<svg
-									class="h-3.5 w-3.5 transition-transform duration-200 {isUserMenuOpen ? 'rotate-180' : ''}"
+									class="h-3.5 w-3.5 transition-transform duration-200 {isUserMenuOpen
+										? 'rotate-180'
+										: ''}"
 									fill="none"
 									stroke="currentColor"
 									viewBox="0 0 24 24"
@@ -165,7 +187,7 @@
 
 							{#if isUserMenuOpen}
 								<div
-									class="absolute right-0 top-full z-50 mt-1 min-w-36 origin-top-right overflow-hidden rounded-xl border border-slate-200 bg-white py-1.5 shadow-xl"
+									class="absolute top-full right-0 z-50 mt-1 min-w-36 origin-top-right overflow-hidden rounded-xl border border-slate-200 bg-white py-1.5 shadow-xl"
 									transition:fly={{ y: -6, duration: 150 }}
 								>
 									<button
@@ -173,12 +195,7 @@
 										onclick={handleClearCache}
 										class="flex w-full items-center gap-2 px-4 py-2 text-left text-sm font-medium text-slate-600 transition-colors hover:bg-red-50 hover:text-red-600 focus:outline-none focus-visible:bg-red-50 focus-visible:text-red-600"
 									>
-										<svg
-											class="h-4 w-4"
-											fill="none"
-											stroke="currentColor"
-											viewBox="0 0 24 24"
-										>
+										<svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 											<path
 												stroke-linecap="round"
 												stroke-linejoin="round"
@@ -194,7 +211,7 @@
 
 						<button
 							onclick={handleLogout}
-							class="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-600 shadow-sm transition-all duration-150 ease-out hover:scale-[1.03] hover:border-slate-400 hover:bg-slate-100 hover:text-slate-900 hover:shadow-md active:scale-[0.97] active:bg-slate-200 active:shadow-inner focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+							class="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-600 shadow-sm transition-all duration-150 ease-out hover:scale-[1.03] hover:border-slate-400 hover:bg-slate-100 hover:text-slate-900 hover:shadow-md focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none active:scale-[0.97] active:bg-slate-200 active:shadow-inner"
 						>
 							退出登录
 						</button>
@@ -202,7 +219,7 @@
 				{:else}
 					<button
 						onclick={goToLogin}
-						class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+						class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none"
 					>
 						登录
 					</button>
@@ -217,9 +234,19 @@
 			>
 				<svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 					{#if isMobileMenuOpen}
-						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+						<path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							stroke-width="2"
+							d="M6 18L18 6M6 6l12 12"
+						/>
 					{:else}
-						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+						<path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							stroke-width="2"
+							d="M4 6h16M4 12h16M4 18h16"
+						/>
 					{/if}
 				</svg>
 			</button>
@@ -229,36 +256,45 @@
 	<!-- Mobile Search Bar -->
 	{#if isMobileSearchOpen}
 		<div class="border-t border-slate-200 bg-white px-4 py-3 sm:hidden">
-			<CourseSearch
-				classes="w-full"
-				onNavigate={() => (isMobileSearchOpen = false)}
-			/>
+			<CourseSearch classes="w-full" onNavigate={() => (isMobileSearchOpen = false)} />
 		</div>
 	{/if}
 
 	<!-- Mobile Menu -->
 	{#if isMobileMenuOpen}
 		<div class="border-t border-slate-200 bg-white md:hidden">
-			<div class="space-y-1 px-4 pb-3 pt-2">
+			<div class="space-y-1 px-4 pt-2 pb-3">
 				<a
 					href={resolve('/courses')}
-					onclick={() => isMobileMenuOpen = false}
-					class="block rounded-md px-3 py-2 text-base font-medium text-slate-700 hover:bg-slate-50 hover:text-blue-600 {$page.url.pathname.startsWith('/courses') ? 'bg-blue-50 text-blue-600' : ''}"
+					onclick={() => (isMobileMenuOpen = false)}
+					class="block rounded-md px-3 py-2 text-base font-medium text-slate-700 hover:bg-slate-50 hover:text-blue-600 {$page.url.pathname.startsWith(
+						'/courses'
+					)
+						? 'bg-blue-50 text-blue-600'
+						: ''}"
 				>
 					课程列表
 				</a>
 				{#if authStore.isAuthenticated}
 					<a
 						href={resolve('/enrollments')}
-						onclick={() => isMobileMenuOpen = false}
-						class="block rounded-md px-3 py-2 text-base font-medium text-slate-700 hover:bg-slate-50 hover:text-blue-600 {$page.url.pathname.startsWith('/enrollments') ? 'bg-blue-50 text-blue-600' : ''}"
+						onclick={() => (isMobileMenuOpen = false)}
+						class="block rounded-md px-3 py-2 text-base font-medium text-slate-700 hover:bg-slate-50 hover:text-blue-600 {$page.url.pathname.startsWith(
+							'/enrollments'
+						)
+							? 'bg-blue-50 text-blue-600'
+							: ''}"
 					>
 						报名信息
 					</a>
 					<a
 						href={resolve('/reports')}
-						onclick={() => isMobileMenuOpen = false}
-						class="block rounded-md px-3 py-2 text-base font-medium text-slate-700 hover:bg-slate-50 hover:text-blue-600 {$page.url.pathname.startsWith('/reports') ? 'bg-blue-50 text-blue-600' : ''}"
+						onclick={() => (isMobileMenuOpen = false)}
+						class="block rounded-md px-3 py-2 text-base font-medium text-slate-700 hover:bg-slate-50 hover:text-blue-600 {$page.url.pathname.startsWith(
+							'/reports'
+						)
+							? 'bg-blue-50 text-blue-600'
+							: ''}"
 					>
 						统计报表
 					</a>
@@ -268,7 +304,7 @@
 					</div>
 					<button
 						onclick={handleLogout}
-						class="block w-full rounded-md px-3 py-2 text-left text-base font-medium text-slate-700 transition-all duration-150 ease-out hover:bg-slate-100 hover:pl-4 hover:text-slate-900 active:scale-[0.98] active:bg-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+						class="block w-full rounded-md px-3 py-2 text-left text-base font-medium text-slate-700 transition-all duration-150 ease-out hover:bg-slate-100 hover:pl-4 hover:text-slate-900 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none active:scale-[0.98] active:bg-slate-200"
 					>
 						退出登录
 					</button>

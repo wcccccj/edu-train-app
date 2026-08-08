@@ -2,7 +2,6 @@
 	import CourseCard, {
 		type CourseCardCourse,
 		type CourseCardRegistration,
-		type CourseCardProps,
 		type CourseLocation
 	} from '$lib/components/CourseCard.svelte';
 	import DataTable from '$lib/components/table/DataTable.svelte';
@@ -23,9 +22,19 @@
 			desc: '培训地点数组；name 必选，capacity 可选（仅有效正数才渲染）',
 			required: '是'
 		},
-		{ name: 'registeredCount', type: 'number', desc: '课程总报名人数（右上角容量进度）', required: '是' },
+		{
+			name: 'registeredCount',
+			type: 'number',
+			desc: '课程总报名人数（右上角容量进度）',
+			required: '是'
+		},
 		{ name: 'onRegister', type: '(course) => void', desc: '点击「立即报名」回调', required: '是' },
-		{ name: 'onCancel', type: '(course, reg) => void', desc: '点击「取消报名」回调', required: '是' }
+		{
+			name: 'onCancel',
+			type: '(course, reg) => void',
+			desc: '点击「取消报名」回调',
+			required: '是'
+		}
 	];
 
 	const apiColumns: Column<ApiRow>[] = [
@@ -44,7 +53,6 @@
 	};
 
 	const futureDate = (days: number) => new Date(Date.now() + days * 86400000).toISOString();
-	const pastDate = (days: number) => new Date(Date.now() - days * 86400000).toISOString();
 
 	const scenarios: ShowcaseScenario[] = [
 		{

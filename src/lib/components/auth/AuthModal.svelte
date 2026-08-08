@@ -18,7 +18,7 @@
 				// Just take the first 3 users for demo purposes
 				mockUsers = data.data.slice(0, 3);
 			}
-		} catch (e) {
+		} catch {
 			errorMsg = '无法获取用户列表';
 		}
 	});
@@ -44,7 +44,7 @@
 				authStore.login(data.data.user, data.data.token, true); // default remember me
 				authStore.closeModal();
 			}
-		} catch (err) {
+		} catch {
 			errorMsg = '网络错误，请稍后再试';
 		} finally {
 			isLoading = false;
@@ -76,7 +76,7 @@
 
 		<div
 			class="relative w-full max-w-[460px] overflow-hidden rounded-2xl bg-white shadow-xl"
-			transition:fade={{ y: 20, duration: 200 }}
+			transition:fade={{ duration: 200 }}
 		>
 			<!-- Close Button -->
 			<button

@@ -1,10 +1,10 @@
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
-import { createApplication, updateApplication, deleteApplication } from './application.handler';
+import { createApplication, updateApplication } from './application.handler';
 import { applicationStore } from '../store/applications.store';
 import { courseStore } from '../store/courses.store';
 import { locationStore } from '../store/locations.store';
 import type { Course } from '$lib/types/course.types';
-import type { ApplicationCreatePayload } from '$lib/types/application.types';
+import type { Application, ApplicationCreatePayload } from '$lib/types/application.types';
 
 describe('application.handler', () => {
 	const userId = 'user-001';
@@ -74,7 +74,7 @@ describe('application.handler', () => {
 			userId,
 			courseId: 1001,
 			status: 'pending'
-		} as any);
+		} as Application);
 
 		const res = updateApplication(userId, 'APP1', { phone: '139' });
 		expect(res.ok).toBe(false);

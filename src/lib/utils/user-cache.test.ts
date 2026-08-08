@@ -10,8 +10,12 @@ describe('userCache', () => {
 	});
 
 	it('should generate cache keys that embed the user_id', () => {
-		expect(userCacheKey('enrollment_status', 'user-001')).toBe('TAS_CACHE_enrollment_status_user-001');
-		expect(userCacheKey('learning_progress', 'user-002')).toBe('TAS_CACHE_learning_progress_user-002');
+		expect(userCacheKey('enrollment_status', 'user-001')).toBe(
+			'TAS_CACHE_enrollment_status_user-001'
+		);
+		expect(userCacheKey('learning_progress', 'user-002')).toBe(
+			'TAS_CACHE_learning_progress_user-002'
+		);
 	});
 
 	it('should set and get values for a user', () => {

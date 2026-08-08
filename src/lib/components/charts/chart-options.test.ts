@@ -13,11 +13,11 @@ describe('chart-options.ts', () => {
 
 		const option = getCourseRankingOption(names, values);
 
-		// @ts-ignore
+		// @ts-expect-error 访问未公开在类型定义中的 ECharts 内部字段
 		expect(option.yAxis.data).toEqual(names);
-		// @ts-ignore
+		// @ts-expect-error 访问未公开在类型定义中的 ECharts 内部字段
 		expect(option.series[0].data).toEqual(values);
-		// @ts-ignore
+		// @ts-expect-error 访问未公开在类型定义中的 ECharts 内部字段
 		expect(option.series[0].name).toBe('申请人数');
 	});
 
@@ -30,9 +30,9 @@ describe('chart-options.ts', () => {
 		const option = getTypeDistributionOption(data);
 
 		expect(option.color).toEqual(CHART_COLORS);
-		// @ts-ignore
+		// @ts-expect-error 访问未公开在类型定义中的 ECharts 内部字段
 		expect(option.series[0].data).toEqual(data);
-		// @ts-ignore
+		// @ts-expect-error 访问未公开在类型定义中的 ECharts 内部字段
 		expect(option.series[0].name).toBe('培训类型');
 	});
 
@@ -42,11 +42,11 @@ describe('chart-options.ts', () => {
 
 		const option = getDepartmentDistributionOption(names, values);
 
-		// @ts-ignore
+		// @ts-expect-error 访问未公开在类型定义中的 ECharts 内部字段
 		expect(option.xAxis.data).toEqual(names);
-		// @ts-ignore
+		// @ts-expect-error 访问未公开在类型定义中的 ECharts 内部字段
 		expect(option.series[0].data).toEqual(values);
-		// @ts-ignore
+		// @ts-expect-error 访问未公开在类型定义中的 ECharts 内部字段
 		expect(option.series[0].name).toBe('参与人次');
 	});
 });

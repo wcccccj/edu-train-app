@@ -21,14 +21,14 @@ describe('AuthModal', () => {
 		authStore.isAuthModalOpen = true;
 		vi.resetAllMocks();
 
-		(global.fetch as any).mockImplementation((url: string) => {
-			if (url === '/api/users') {
+		vi.mocked(fetch).mockImplementation((url) => {
+			if (String(url) === '/api/users') {
 				return Promise.resolve({
 					ok: true,
 					json: () => Promise.resolve({ data: mockUsers })
-				});
+				} as unknown as Response);
 			}
-			return Promise.resolve({ ok: false });
+			return Promise.resolve({ ok: false } as unknown as Response);
 		});
 	});
 
@@ -59,20 +59,20 @@ describe('AuthModal', () => {
 	});
 
 	it('should handle login successfully', async () => {
-		(global.fetch as any).mockImplementation((url: string) => {
-			if (url === '/api/users') {
+		vi.mocked(fetch).mockImplementation((url) => {
+			if (String(url) === '/api/users') {
 				return Promise.resolve({
 					ok: true,
 					json: () => Promise.resolve({ data: mockUsers })
-				});
+				} as unknown as Response);
 			}
-			if (url === '/api/auth/login') {
+			if (String(url) === '/api/auth/login') {
 				return Promise.resolve({
 					ok: true,
 					json: () => Promise.resolve({ data: { user: mockUsers[0], token: 't1' } })
-				});
+				} as unknown as Response);
 			}
-			return Promise.resolve({ ok: false });
+			return Promise.resolve({ ok: false } as unknown as Response);
 		});
 
 		render(AuthModal);

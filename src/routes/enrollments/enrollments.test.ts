@@ -2,6 +2,7 @@ import { render, screen, fireEvent, cleanup } from '@testing-library/svelte';
 import { describe, it, expect, afterEach, beforeEach, vi } from 'vitest';
 
 vi.mock('$app/environment', () => ({ browser: true }));
+vi.mock('$app/paths', () => ({ resolve: (path: string) => path }));
 import EnrollmentsPage from './+page.svelte';
 import { enrollmentsStore, type Enrollment } from '$lib/stores/enrollments.store.svelte';
 
@@ -120,10 +121,17 @@ describe('Enrollments Page', () => {
 				location: '北京中心',
 				timeSlot: 'morning',
 				extraFields: [
-					{ name: 'department', label: '所属部门', type: 'select', required: true, options: [
-						{ label: '技术部', value: 'tech' },
-						{ label: '市场部', value: 'market' }
-					], value: 'tech' },
+					{
+						name: 'department',
+						label: '所属部门',
+						type: 'select',
+						required: true,
+						options: [
+							{ label: '技术部', value: 'tech' },
+							{ label: '市场部', value: 'market' }
+						],
+						value: 'tech'
+					},
 					{ name: 'position', label: '岗位', type: 'text', required: true, value: '前端工程师' }
 				],
 				startTime: '2026-09-10T09:00:00'

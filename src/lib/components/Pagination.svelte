@@ -163,7 +163,7 @@
 					onkeydown={(e) => {
 						if (e.key === 'Enter') handleJump();
 					}}
-					class="h-9 w-16 border border-slate-200 bg-white px-2 text-center text-sm text-slate-700 outline-none transition-colors focus:border-blue-600"
+					class="h-9 w-16 border border-slate-200 bg-white px-2 text-center text-sm text-slate-700 transition-colors outline-none focus:border-blue-600"
 					aria-label="跳转页码输入"
 				/>
 				<button

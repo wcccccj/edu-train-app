@@ -3,6 +3,8 @@
 	 * 统计报表加载态骨架屏
 	 * 在客户端导航至 /reports 期间由 +layout.svelte 根据 navigating 状态渲染
 	 */
+	// 渲染 5 个 KPI 骨架卡片
+	const kpiItems = Array.from({ length: 5 });
 </script>
 
 <div class="min-h-screen bg-slate-50 p-6 md:p-10">
@@ -14,7 +16,7 @@
 
 		<!-- KPI 骨架 -->
 		<section class="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
-			{#each Array(5) as _}
+			{#each kpiItems}
 				<div class="rounded-xl border border-slate-200 bg-white p-6">
 					<div class="h-4 w-20 rounded bg-slate-200"></div>
 					<div class="mt-3 h-8 w-16 rounded bg-slate-200"></div>

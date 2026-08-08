@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { resolve } from '$app/paths';
 	import { z } from 'zod';
 	import { authStore } from '$lib/stores/auth.store.svelte';
 	import {
@@ -9,7 +10,12 @@
 	} from '$lib/stores/enrollments.store.svelte';
 	import { maskPhone, resolveLocation, formatStartTime } from '$lib/utils/enrollment-display';
 	import DynamicForm from '$lib/components/form/DynamicForm.svelte';
-	import type { SectionedFormSchema, FormField, FormSection } from '$lib/components/form/form.types';
+	import type {
+		SectionedFormSchema,
+		FormField,
+		FormSection,
+		FormValues
+	} from '$lib/components/form/form.types';
 	import Message from '$lib/components/message/Message.svelte';
 	import { messageStore } from '$lib/components/message/message.store.svelte';
 	import DataTable from '$lib/components/table/DataTable.svelte';
@@ -25,16 +31,29 @@
 
 	/** 报名列表列配置：展示逻辑声明化，复杂单元格（状态/操作）走逐列插槽 */
 	const enrollColumns: Column<Enrollment>[] = [
-		{ key: 'courseName', title: '课程名称', fallback: '—', cellClass: 'font-medium text-slate-900' },
+		{
+			key: 'courseName',
+			title: '课程名称',
+			fallback: '—',
+			cellClass: 'font-medium text-slate-900'
+		},
 		{ key: 'type', title: '培训类型', map: TYPE_LABEL },
 		{ key: 'name', title: '报名人', fallback: '—', cellClass: 'text-slate-800' },
-		{ key: 'phone', title: '联系方式', formatter: (value) => maskPhone(value as string | undefined) },
+		{
+			key: 'phone',
+			title: '联系方式',
+			formatter: (value) => maskPhone(value as string | undefined)
+		},
 		{
 			key: 'location',
 			title: '培训地点',
 			formatter: (_value, row) => resolveLocation(row.type, row.location)
 		},
-		{ key: 'startTime', title: '开始时间', formatter: (_value, row) => formatStartTime(row.startTime) },
+		{
+			key: 'startTime',
+			title: '开始时间',
+			formatter: (_value, row) => formatStartTime(row.startTime)
+		},
 		{ key: 'applyDate', title: '申请时间', fallback: '—' },
 		{ key: 'status', title: '状态' },
 		{ key: 'actions', title: '操作' }
@@ -153,8 +172,8 @@
 		};
 	}
 
-	function getEditInitialData(app: Enrollment): Record<string, any> {
-		const initial: Record<string, any> = {
+	function getEditInitialData(app: Enrollment): FormValues {
+		const initial: FormValues = {
 			name: app.name,
 			phone: app.phone,
 			address: app.address ?? '',
@@ -167,16 +186,16 @@
 		return initial;
 	}
 
-	function handleEditSubmit(data: Record<string, any>) {
+	function handleEditSubmit(data: FormValues) {
 		if (!editingApp) return;
 		const extraFields = (editingApp.extraFields ?? []).map((f) => ({
 			...f,
 			value: data[f.name] ?? ''
 		}));
 		enrollmentsStore.update(editingApp.id, {
-			name: data.name,
-			phone: data.phone,
-			address: data.address,
+			name: data.name as string,
+			phone: data.phone as string,
+			address: data.address as string,
 			location: data.location,
 			timeSlot: data.timeSlot,
 			extraFields
@@ -216,8 +235,8 @@
 				<h3 class="text-lg font-medium text-slate-900">暂无报名信息</h3>
 				<p class="mt-2 text-slate-500">您可以在课程列表中选择感兴趣的课程进行报名。</p>
 				<a
-					href="/courses"
-					class="mt-6 inline-flex items-center justify-center rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+					href={resolve('/courses')}
+					class="mt-6 inline-flex items-center justify-center rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none"
 				>
 					去报名
 				</a>
@@ -242,7 +261,9 @@
 
 			{#snippet statusCell(app: Enrollment)}
 				<span
-					class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium ring-1 ring-inset {STATUS_CLASS[app.status]}"
+					class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium ring-1 ring-inset {STATUS_CLASS[
+						app.status
+					]}"
 				>
 					{STATUS_LABEL[app.status]}
 				</span>
@@ -251,7 +272,7 @@
 				<button
 					type="button"
 					onclick={() => (editingApp = app)}
-					class="inline-flex items-center gap-1 rounded-md border border-blue-200 bg-white px-3 py-1.5 text-xs font-medium text-blue-600 transition-colors hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+					class="inline-flex items-center gap-1 rounded-md border border-blue-200 bg-white px-3 py-1.5 text-xs font-medium text-blue-600 transition-colors hover:bg-blue-50 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none"
 				>
 					<svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
 						><path

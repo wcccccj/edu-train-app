@@ -1,29 +1,25 @@
 <script lang="ts">
-	import type { SectionedFormSchema } from './form.types';
+	import type { SectionedFormSchema, FormValues } from './form.types';
 	import { EnrollmentStore } from './EnrollmentStore.svelte';
 	import DynamicForm from './DynamicForm.svelte';
 	import Preview from './Preview.svelte';
 
-	let {
-		schema,
-		sessionKey,
-		onComplete,
-		initialData,
-		onCancel
-	} = $props<{
+	let { schema, sessionKey, onComplete, initialData, onCancel } = $props<{
 		schema: SectionedFormSchema;
 		sessionKey: string;
-		onComplete: (data: Record<string, any>) => void | Promise<void>;
-		initialData?: Record<string, any>;
+		onComplete: (data: FormValues) => void | Promise<void>;
+		initialData?: FormValues;
 		onCancel?: () => void;
 	}>();
 
-	const store = new EnrollmentStore(sessionKey, initialData);
+	// 仅读取 props 的初始值创建一次 store（sessionKey / initialData 在组件生命周期内固定）。
+	// 引用置于闭包内以明确“只读取一次”，避免响应式追踪。
+	const store = (() => new EnrollmentStore(sessionKey, initialData))();
 
 	let submitStatus = $state<'idle' | 'submitting' | 'success' | 'error'>('idle');
 	let submitError = $state<string>('');
 
-	function handleFormSubmit(data: Record<string, any>) {
+	function handleFormSubmit(data: FormValues) {
 		store.updateData(data);
 		store.setStep('preview');
 	}
@@ -65,12 +61,7 @@
 	<div class="py-8 text-center">
 		<div class="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
 			<svg class="h-8 w-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-				<path
-					stroke-linecap="round"
-					stroke-linejoin="round"
-					stroke-width="2"
-					d="M5 13l4 4L19 7"
-				/>
+				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
 			</svg>
 		</div>
 		<h3 class="mb-2 text-xl font-medium text-slate-900">报名成功</h3>
@@ -99,7 +90,7 @@
 			{schema}
 			initialData={store.data}
 			onSubmit={handleFormSubmit}
-			onCancel={onCancel}
+			{onCancel}
 			submitText="保存信息"
 		/>
 	{:else if store.step === 'preview'}

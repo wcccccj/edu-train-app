@@ -4,17 +4,19 @@ import { applicationStore } from '../store/applications.store';
 import { courseStore } from '../store/courses.store';
 import { userStore } from '../store/users.store';
 import type { Application } from '$lib/types/application.types';
+import type { Course } from '$lib/types/course.types';
+import type { User } from '$lib/types/user.types';
 
 describe('stats.handler', () => {
 	beforeEach(() => {
 		vi.spyOn(courseStore, 'listAll').mockReturnValue([
-			{ id: 1, name: 'C1', type: 'online', enrolled: 10 } as any,
-			{ id: 2, name: 'C2', type: 'offline', enrolled: 20 } as any
+			{ id: 1, name: 'C1', type: 'online', enrolled: 10 } as Course,
+			{ id: 2, name: 'C2', type: 'offline', enrolled: 20 } as Course
 		]);
 
 		vi.spyOn(userStore, 'findById').mockImplementation((id) => {
-			if (id === 'user-1') return { department: 'IT' } as any;
-			if (id === 'user-2') return { department: 'HR' } as any;
+			if (id === 'user-1') return { department: 'IT' } as User;
+			if (id === 'user-2') return { department: 'HR' } as User;
 			return null;
 		});
 

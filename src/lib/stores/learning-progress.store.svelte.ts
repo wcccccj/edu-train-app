@@ -26,7 +26,10 @@ class LearningProgressStore {
 	init(userId: string | null): void {
 		if (this.currentUserId === userId) return;
 		this.currentUserId = userId;
-		this.progress = userId && isBrowser ? (userCache.get<CourseProgress[]>('learning_progress', userId) ?? []) : [];
+		this.progress =
+			userId && isBrowser
+				? (userCache.get<CourseProgress[]>('learning_progress', userId) ?? [])
+				: [];
 	}
 
 	private save(): void {

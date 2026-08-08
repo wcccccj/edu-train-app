@@ -25,11 +25,7 @@ export interface EllipsisOptions {
 }
 
 /** 列宽：固定像素 / 百分比 / 自适应 / 最小最大范围 */
-export type ColumnWidth =
-	| number
-	| `${number}%`
-	| 'auto'
-	| { min?: number; max?: number };
+export type ColumnWidth = number | `${number}%` | 'auto' | { min?: number; max?: number };
 
 /** 单元格文本对齐方式 */
 export type Align = 'left' | 'center' | 'right';

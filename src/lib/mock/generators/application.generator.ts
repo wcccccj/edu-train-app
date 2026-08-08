@@ -67,9 +67,7 @@ export function generateApplications(users: User[], courses: Course[]): Applicat
 		for (let i = 0; i < count; i++) {
 			const course = courses[(seq * 7 + i * 3) % courses.length];
 			const applyOffsetDays = (seq * 5 + i * 11) % 90;
-			const applyDate = new Date(now - applyOffsetDays * 86400_000)
-				.toISOString()
-				.slice(0, 10);
+			const applyDate = new Date(now - applyOffsetDays * 86400_000).toISOString().slice(0, 10);
 			const status = pickStatus(seq, i);
 
 			const app: Application = {
@@ -93,10 +91,9 @@ export function generateApplications(users: User[], courses: Course[]): Applicat
 				},
 				learningGoal: LEARNING_GOALS[seq % LEARNING_GOALS.length],
 				workExperience: (seq * 3) % 15,
-				locationId:
-					course.type === 'online' ? undefined : course.locations[0]?.id,
+				locationId: course.type === 'online' ? undefined : course.locations[0]?.id,
 				timeSlot: course.type === 'online' ? undefined : course.timeSlots[0],
-				dailyStudyTime: course.type === 'online' ? (1 + (seq % 4)) : undefined,
+				dailyStudyTime: course.type === 'online' ? 1 + (seq % 4) : undefined,
 				extraFields: {},
 				remarks: ''
 			};

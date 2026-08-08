@@ -4,7 +4,8 @@
 	const ICON_PATHS: Record<MessageType, string> = {
 		success: 'M5 13l4 4L19 7',
 		error: 'M6 18L18 6M6 6l12 12',
-		warning: 'M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z',
+		warning:
+			'M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z',
 		info: 'M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z'
 	};
 
@@ -27,10 +28,7 @@
 		aria-live="polite"
 	>
 		{#each messageStore.messages as msg (msg.id)}
-			<div
-				role={msg.type === 'error' ? 'alert' : 'status'}
-				class={TYPE_CLASSES[msg.type]}
-			>
+			<div role={msg.type === 'error' ? 'alert' : 'status'} class={TYPE_CLASSES[msg.type]}>
 				<span class="mt-0.5 shrink-0">
 					<svg
 						class="h-5 w-5"
@@ -39,16 +37,13 @@
 						stroke-width="2"
 						viewBox="0 0 24 24"
 						aria-hidden="true"
-						><path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							d={ICON_PATHS[msg.type]}
+						><path stroke-linecap="round" stroke-linejoin="round" d={ICON_PATHS[msg.type]}
 						></path></svg
 					>
 				</span>
 				<div class="min-w-0 flex-1">
 					<p class="text-sm font-semibold">{msg.title}</p>
-					<p class="mt-0.5 break-words text-sm leading-snug">{msg.content}</p>
+					<p class="mt-0.5 text-sm leading-snug break-words">{msg.content}</p>
 				</div>
 				<button
 					type="button"
@@ -63,10 +58,7 @@
 						stroke-width="2"
 						viewBox="0 0 24 24"
 						aria-hidden="true"
-						><path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							d="M6 18L18 6M6 6l12 12"
+						><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"
 						></path></svg
 					>
 				</button>

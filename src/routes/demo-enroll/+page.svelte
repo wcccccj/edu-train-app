@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { buildEnrollmentSchema } from '$lib/components/form/enrollment-schema';
 	import EnrollmentFlow from '$lib/components/form/EnrollmentFlow.svelte';
+	import type { FormValues } from '$lib/components/form/form.types';
 	import dayjs from 'dayjs';
 
 	let course = $state({
@@ -11,7 +12,7 @@
 	});
 
 	let schema = $derived(buildEnrollmentSchema(course));
-	let result = $state<Record<string, any> | null>(null);
+	let result = $state<FormValues | null>(null);
 
 	function toggleLock() {
 		// Toggle between >24h and <24h
@@ -23,7 +24,7 @@
 		}
 	}
 
-	function handleComplete(data: Record<string, any>) {
+	function handleComplete(data: FormValues) {
 		result = data;
 		alert('报名成功！\n' + JSON.stringify(data, null, 2));
 	}

@@ -105,9 +105,7 @@ export function buildEnrollmentSchema(
 				zObject[field.name] = z.string().min(1, `${field.label}不能为空`);
 				if (field.type === 'select') {
 					const values = field.options?.map((o) => o.value) ?? [];
-					zObject[field.name] = z.enum(
-						values as [string, ...string[]]
-					) as z.ZodTypeAny;
+					zObject[field.name] = z.enum(values as [string, ...string[]]) as z.ZodTypeAny;
 				}
 			}
 		});

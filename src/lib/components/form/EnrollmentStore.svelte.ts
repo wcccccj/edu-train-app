@@ -3,7 +3,7 @@ import { userCache } from '../../utils/user-cache';
 
 const isBrowser = typeof window !== 'undefined';
 
-export class EnrollmentStore<T extends Record<string, any>> {
+export class EnrollmentStore<T extends Record<string, unknown>> {
 	private key: string;
 	data = $state<T>({} as T);
 	step = $state<'form' | 'preview'>('form');

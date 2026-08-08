@@ -61,16 +61,14 @@ describe('Chart.svelte', () => {
 			observe = vi.fn();
 			unobserve = vi.fn();
 			disconnect = vi.fn();
-		} as any;
+		} as unknown as typeof ResizeObserver;
 
 		render(Chart, {
 			props: { options }
 		});
 
-		// 模拟窗口 resize 触发回调
-		if (observerCallback) {
-			observerCallback();
-		}
+		// 模拟窗口 resize 触发回调（TS 无法追踪闭包内的赋值，此处用断言绕过字面量窄化）
+		(observerCallback as (() => void) | null)?.();
 
 		const mockInstance = vi.mocked(echarts.init).mock.results[0].value;
 		expect(mockInstance.resize).toHaveBeenCalled();

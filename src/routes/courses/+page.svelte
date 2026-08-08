@@ -14,6 +14,7 @@
 		DEFAULT_LOCATIONS,
 		type CourseLocationOption
 	} from '$lib/components/form/enrollment-schema';
+	import type { FormValues } from '$lib/components/form/form.types';
 	import type { ApiResponse } from '$lib/types/common.types';
 	import type { Course as ApiCourse } from '$lib/types/course.types';
 	import Message from '$lib/components/message/Message.svelte';
@@ -46,11 +47,7 @@
 
 	let schema = $derived(
 		activeCourse
-			? buildEnrollmentSchema(
-					{ ...activeCourse, locations: courseLocations },
-					undefined,
-					false
-				)
+			? buildEnrollmentSchema({ ...activeCourse, locations: courseLocations }, undefined, false)
 			: null
 	);
 
@@ -97,7 +94,7 @@
 		courseLocations = [];
 	}
 
-	function getInitialData(): Record<string, any> | undefined {
+	function getInitialData(): FormValues | undefined {
 		// 新报名且已登录：用当前用户姓名预填
 		if (authStore.isAuthenticated && authStore.currentUser?.name) {
 			return { name: authStore.currentUser.name };
@@ -105,7 +102,7 @@
 		return undefined;
 	}
 
-	function handleEnrollmentComplete(data: Record<string, any>) {
+	function handleEnrollmentComplete(data: FormValues) {
 		if (!activeCourse) return;
 
 		const userId = authStore.currentUser?.id;
@@ -133,9 +130,9 @@
 		const newReg: Registration = {
 			id: crypto.randomUUID(),
 			courseId: activeCourse.id,
-			name: data.name,
-			phone: data.phone,
-			address: data.address,
+			name: data.name as string,
+			phone: data.phone as string,
+			address: data.address as string,
 			location: data.location,
 			timeSlot: data.timeSlot,
 			extraFields
@@ -151,9 +148,9 @@
 				type: activeCourse.type,
 				applyDate: new Date().toISOString().slice(0, 10),
 				status: 'pending',
-				name: data.name,
-				phone: data.phone,
-				address: data.address,
+				name: data.name as string,
+				phone: data.phone as string,
+				address: data.address as string,
 				location: data.location,
 				locationOptions,
 				timeSlot: data.timeSlot,
@@ -177,9 +174,7 @@
 	<main class="mx-auto max-w-5xl px-6 pt-10 pb-10">
 		<div class="mb-10">
 			<h1 class="mb-2 text-3xl font-bold tracking-tight">培训课程报名</h1>
-			<p class="text-slate-500">
-				选择您感兴趣的课程参与。
-			</p>
+			<p class="text-slate-500">选择您感兴趣的课程参与。</p>
 		</div>
 
 		<div class="grid grid-cols-1 gap-6 md:grid-cols-2">

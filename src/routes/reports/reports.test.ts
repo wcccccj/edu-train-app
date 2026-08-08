@@ -21,7 +21,7 @@ vi.mock('echarts', () => ({
 }));
 
 /** 从 setOption 调用历史中找出课程排行（横向柱状图，yAxis.data 为课程名）的最后一次 option */
-function findLastRankingOption(): { yAxis?: { data?: string[] } } | undefined {
+function findLastRankingOption(): { yAxis?: { data?: unknown[] } } | undefined {
 	const calls = mockInstance.setOption.mock.calls as Array<[{ yAxis?: { data?: unknown[] } }]>;
 	for (let i = calls.length - 1; i >= 0; i--) {
 		const data = calls[i][0]?.yAxis?.data;

@@ -7,8 +7,22 @@ import type { User } from '$lib/types/user.types';
 
 vi.mock('$app/environment', () => ({ browser: true }));
 
-const userA: User = { id: 'userA', userId: 'userA', name: '用户A', gender: 'male', phone: '13800138000', email: 'a@example.com' };
-const userB: User = { id: 'userB', userId: 'userB', name: '用户B', gender: 'female', phone: '13800138001', email: 'b@example.com' };
+const userA: User = {
+	id: 'userA',
+	userId: 'userA',
+	name: '用户A',
+	gender: 'male',
+	phone: '13800138000',
+	email: 'a@example.com'
+};
+const userB: User = {
+	id: 'userB',
+	userId: 'userB',
+	name: '用户B',
+	gender: 'female',
+	phone: '13800138001',
+	email: 'b@example.com'
+};
 
 function makeEnrollment(id: string, courseId: string): Enrollment {
 	return {
@@ -90,7 +104,11 @@ describe('用户缓存隔离集成测试', () => {
 
 	it('个人学习进度数据按用户隔离', () => {
 		learningProgressStore.init('userA');
-		learningProgressStore.addOrUpdate({ courseId: 'course-1', progress: 50, lastStudiedAt: '2026-08-01' });
+		learningProgressStore.addOrUpdate({
+			courseId: 'course-1',
+			progress: 50,
+			lastStudiedAt: '2026-08-01'
+		});
 
 		// B 的学习进度为空
 		learningProgressStore.init('userB');

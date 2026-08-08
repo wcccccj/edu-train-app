@@ -30,3 +30,9 @@ export interface SectionedFormSchema {
 	sections: FormSection[];
 	validationSchema: z.ZodSchema;
 }
+
+/**
+ * 动态表单数据：字段值统一为字符串（未填则为 undefined）。
+ * 报名表单字段均为文本类输入（text/tel/textarea/select/datetime-local）。
+ */
+export type FormValues = Record<string, string | undefined>;

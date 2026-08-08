@@ -57,13 +57,14 @@
 
 	function submit(keyword = query) {
 		const kw = keyword.trim();
-		const url = `${resolve('/courses')}${kw ? `?keyword=${encodeURIComponent(kw)}` : ''}`;
 		// 搜索事件启动后立即清空输入框与结果，防止残留搜索词干扰后续操作
 		query = '';
 		results = [];
 		isOpen = false;
 		onNavigate();
-		goto(url);
+		// 动态 URL：resolve 处理后拼用户输入的查询参数，无法静态匹配路由 ID，故豁免该规则
+		// eslint-disable-next-line svelte/no-navigation-without-resolve
+		goto(`${resolve('/courses')}${kw ? `?keyword=${encodeURIComponent(kw)}` : ''}`);
 	}
 
 	function handleSearch() {
@@ -88,9 +89,16 @@
 
 <div class={`relative ${classes}`}>
 	<div class="group relative">
-		<div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-slate-400 group-focus-within:text-blue-600">
+		<div
+			class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-slate-400 group-focus-within:text-blue-600"
+		>
 			<svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+				<path
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					stroke-width="2"
+					d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+				></path>
 			</svg>
 		</div>
 		<input
@@ -109,17 +117,27 @@
 			type="button"
 			onclick={handleSearch}
 			disabled={isLoading}
-			class="absolute inset-y-0 right-0 m-1 flex cursor-pointer items-center gap-1.5 rounded-full bg-blue-600 px-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-wait disabled:opacity-60 sm:px-4"
+			class="absolute inset-y-0 right-0 m-1 flex cursor-pointer items-center gap-1.5 rounded-full bg-blue-600 px-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none disabled:cursor-wait disabled:opacity-60 sm:px-4"
 			aria-label="搜索"
 		>
 			{#if isLoading}
 				<svg class="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
-					<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-					<path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+					<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"
+					></circle>
+					<path
+						class="opacity-75"
+						fill="currentColor"
+						d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+					></path>
 				</svg>
 			{:else}
 				<svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						stroke-width="2"
+						d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+					></path>
 				</svg>
 			{/if}
 			<span class="hidden sm:inline">搜索</span>
@@ -127,11 +145,18 @@
 	</div>
 
 	{#if isOpen}
-		<div class="absolute right-0 left-0 top-full z-20 mt-2 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-lg">
+		<div
+			class="absolute top-full right-0 left-0 z-20 mt-2 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-lg"
+		>
 			{#if error}
 				<div class="flex items-center gap-2 px-4 py-3 text-sm text-red-600">
 					<svg class="h-4 w-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+						<path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							stroke-width="2"
+							d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+						></path>
 					</svg>
 					<span>{error}</span>
 				</div>
@@ -145,8 +170,18 @@
 								class="flex w-full items-center justify-between gap-3 px-4 py-2.5 text-left transition-colors hover:bg-slate-50"
 							>
 								<span class="flex min-w-0 items-center gap-2">
-									<svg class="h-4 w-4 shrink-0 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+									<svg
+										class="h-4 w-4 shrink-0 text-slate-400"
+										fill="none"
+										stroke="currentColor"
+										viewBox="0 0 24 24"
+									>
+										<path
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											stroke-width="2"
+											d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+										></path>
 									</svg>
 									<span class="truncate text-sm text-slate-700">{course.name}</span>
 								</span>

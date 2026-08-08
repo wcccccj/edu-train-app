@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { EnrollmentStore } from './EnrollmentStore.svelte';
+import type { FormValues } from './form.types';
 
 describe('EnrollmentStore', () => {
 	beforeEach(() => {
@@ -43,7 +44,7 @@ describe('EnrollmentStore', () => {
 	});
 
 	it('should merge data on update', () => {
-		const store = new EnrollmentStore('test-key', { name: '赵六' });
+		const store = new EnrollmentStore<FormValues>('test-key', { name: '赵六' });
 		store.updateData({ phone: '13912345678' });
 
 		expect(store.data).toEqual({ name: '赵六', phone: '13912345678' });

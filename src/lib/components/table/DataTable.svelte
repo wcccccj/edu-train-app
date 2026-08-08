@@ -195,11 +195,7 @@
 											stroke-linejoin="round"
 											d="M20 24h10M20 32h6M20 40h14M42 14h6v4h-6zM14 12h20l4 4v34a2 2 0 01-2 2H14a2 2 0 01-2-2V14a2 2 0 012-2z"
 										/>
-										<path
-											stroke-linecap="round"
-											stroke-linejoin="round"
-											d="M40 22l8 8m0-8l-8 8"
-										/>
+										<path stroke-linecap="round" stroke-linejoin="round" d="M40 22l8 8m0-8l-8 8" />
 									</svg>
 									<p class="text-sm text-slate-400">{emptyText}</p>
 								</div>
@@ -251,7 +247,9 @@
 	</div>
 
 	{#if pagination}
-		<div class="flex flex-wrap items-center justify-between gap-3 border-t border-slate-200 px-5 py-3.5">
+		<div
+			class="flex flex-wrap items-center justify-between gap-3 border-t border-slate-200 px-5 py-3.5"
+		>
 			<p class="text-sm text-slate-500">共 {totalRows} 条</p>
 			{#if totalPages > 1}
 				<nav class="flex items-center gap-1.5" aria-label="表格分页">
@@ -263,7 +261,11 @@
 						aria-label="上一页"
 					>
 						<svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-							><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"
+							><path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M15 19l-7-7 7-7"
 							></path></svg
 						>
 					</button>
@@ -296,7 +298,11 @@
 						aria-label="下一页"
 					>
 						<svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-							><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"
+							><path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M9 5l7 7-7 7"
 							></path></svg
 						>
 					</button>

@@ -20,15 +20,15 @@ import Pagination from '$lib/components/Pagination.svelte';
 
 ## Props
 
-| 名称 | 类型 | 默认值 | 说明 |
-|------|------|--------|------|
-| `totalItems` | `number` | —（必填） | 数据总量 |
-| `pageSize` | `number` | —（必填） | 每页显示条数 |
-| `currentPage` | `number` | `1` | 当前页码（可 `bind:` 双向绑定） |
-| `maxVisiblePages` | `number` | `7` | 最多展示的页码按钮数量（含首尾页） |
-| `onPageChange` | `(page: number) => void` | — | 页码变更回调 |
-| `showJump` | `boolean` | `true` | 是否展示跳转输入框 |
-| `showTotal` | `boolean` | `false` | 是否展示「共 N 条」汇总信息 |
+| 名称              | 类型                     | 默认值    | 说明                               |
+| ----------------- | ------------------------ | --------- | ---------------------------------- |
+| `totalItems`      | `number`                 | —（必填） | 数据总量                           |
+| `pageSize`        | `number`                 | —（必填） | 每页显示条数                       |
+| `currentPage`     | `number`                 | `1`       | 当前页码（可 `bind:` 双向绑定）    |
+| `maxVisiblePages` | `number`                 | `7`       | 最多展示的页码按钮数量（含首尾页） |
+| `onPageChange`    | `(page: number) => void` | —         | 页码变更回调                       |
+| `showJump`        | `boolean`                | `true`    | 是否展示跳转输入框                 |
+| `showTotal`       | `boolean`                | `false`   | 是否展示「共 N 条」汇总信息        |
 
 ## 基础用法
 
@@ -40,20 +40,14 @@ import Pagination from '$lib/components/Pagination.svelte';
 	const PAGE_SIZE = 8;
 	let currentPage = $state(1);
 
-	let paginated = $derived(
-		courses.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE)
-	);
+	let paginated = $derived(courses.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE));
 </script>
 
 {#each paginated as item}
 	<Card {item} />
 {/each}
 
-<Pagination
-	totalItems={courses.length}
-	pageSize={PAGE_SIZE}
-	bind:currentPage
-/>
+<Pagination totalItems={courses.length} pageSize={PAGE_SIZE} bind:currentPage />
 ```
 
 ## 受控模式 + 变更回调
@@ -72,12 +66,7 @@ import Pagination from '$lib/components/Pagination.svelte';
 	}
 </script>
 
-<Pagination
-	totalItems={200}
-	pageSize={10}
-	currentPage={currentPage}
-	onPageChange={handlePageChange}
-/>
+<Pagination totalItems={200} pageSize={10} {currentPage} onPageChange={handlePageChange} />
 ```
 
 ## 自定义页码展示数量
@@ -91,13 +80,7 @@ import Pagination from '$lib/components/Pagination.svelte';
 ## 汇总信息与关闭跳转框
 
 ```svelte
-<Pagination
-	totalItems={500}
-	pageSize={20}
-	showTotal
-	showJump={false}
-	bind:currentPage
-/>
+<Pagination totalItems={500} pageSize={20} showTotal showJump={false} bind:currentPage />
 ```
 
 ## 边界场景

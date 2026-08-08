@@ -35,7 +35,7 @@ describe('EnrollmentFlow', () => {
 		});
 
 		expect(screen.getByLabelText('姓名')).toBeInTheDocument();
-		expect(screen.getByRole('button', { name: '预览信息' })).toBeInTheDocument();
+		expect(screen.getByRole('button', { name: '保存信息' })).toBeInTheDocument();
 	});
 
 	it('should flow from form to preview and back to form', async () => {
@@ -51,7 +51,7 @@ describe('EnrollmentFlow', () => {
 		await fireEvent.input(screen.getByLabelText('电话'), { target: { value: '138' } });
 
 		// Submit to preview
-		await fireEvent.click(screen.getByRole('button', { name: '预览信息' }));
+		await fireEvent.click(screen.getByRole('button', { name: '保存信息' }));
 
 		// Should be in preview
 		expect(await screen.findByText('信息预览')).toBeInTheDocument();
@@ -78,7 +78,7 @@ describe('EnrollmentFlow', () => {
 		// Form
 		await fireEvent.input(screen.getByLabelText('姓名'), { target: { value: '李四' } });
 		await fireEvent.input(screen.getByLabelText('电话'), { target: { value: '139' } });
-		await fireEvent.click(screen.getByRole('button', { name: '预览信息' }));
+		await fireEvent.click(screen.getByRole('button', { name: '保存信息' }));
 
 		// Preview
 		expect(await screen.findByText('信息预览')).toBeInTheDocument();
@@ -99,7 +99,7 @@ describe('EnrollmentFlow', () => {
 		// Fill and submit
 		await fireEvent.input(screen.getByLabelText('姓名'), { target: { value: '王五' } });
 		await fireEvent.input(screen.getByLabelText('电话'), { target: { value: '137' } });
-		await fireEvent.click(screen.getByRole('button', { name: '预览信息' }));
+		await fireEvent.click(screen.getByRole('button', { name: '保存信息' }));
 		await fireEvent.click(screen.getByRole('button', { name: '确认提交' }));
 
 		expect(await screen.findByText('报名成功')).toBeInTheDocument();
@@ -119,7 +119,7 @@ describe('EnrollmentFlow', () => {
 		// Fill and submit
 		await fireEvent.input(screen.getByLabelText('姓名'), { target: { value: '赵六' } });
 		await fireEvent.input(screen.getByLabelText('电话'), { target: { value: '136' } });
-		await fireEvent.click(screen.getByRole('button', { name: '预览信息' }));
+		await fireEvent.click(screen.getByRole('button', { name: '保存信息' }));
 		await fireEvent.click(screen.getByRole('button', { name: '确认提交' }));
 
 		expect(await screen.findByText('名额已满')).toBeInTheDocument();
@@ -137,7 +137,7 @@ describe('EnrollmentFlow', () => {
 
 		await fireEvent.input(screen.getByLabelText('姓名'), { target: { value: '钱七' } });
 		await fireEvent.input(screen.getByLabelText('电话'), { target: { value: '135' } });
-		await fireEvent.click(screen.getByRole('button', { name: '预览信息' }));
+		await fireEvent.click(screen.getByRole('button', { name: '保存信息' }));
 		await fireEvent.click(screen.getByRole('button', { name: '确认提交' }));
 
 		expect(onComplete).toHaveBeenCalledWith({ name: '钱七', phone: '135' });
@@ -154,7 +154,7 @@ describe('EnrollmentFlow', () => {
 
 		await fireEvent.input(screen.getByLabelText('姓名'), { target: { value: '孙八' } });
 		await fireEvent.input(screen.getByLabelText('电话'), { target: { value: '134' } });
-		await fireEvent.click(screen.getByRole('button', { name: '预览信息' }));
+		await fireEvent.click(screen.getByRole('button', { name: '保存信息' }));
 		await fireEvent.click(screen.getByRole('button', { name: '确认提交' }));
 
 		expect(await screen.findByText('网络错误')).toBeInTheDocument();
@@ -184,7 +184,7 @@ describe('EnrollmentFlow', () => {
 
 		await fireEvent.input(screen.getByLabelText('姓名'), { target: { value: '周九' } });
 		await fireEvent.input(screen.getByLabelText('电话'), { target: { value: '133' } });
-		await fireEvent.click(screen.getByRole('button', { name: '预览信息' }));
+		await fireEvent.click(screen.getByRole('button', { name: '保存信息' }));
 		await fireEvent.click(screen.getByRole('button', { name: '确认提交' }));
 
 		const doneBtn = await screen.findByRole('button', { name: '完成' });
@@ -208,7 +208,7 @@ describe('EnrollmentFlow', () => {
 		// First attempt - fails
 		await fireEvent.input(screen.getByLabelText('姓名'), { target: { value: '吴十' } });
 		await fireEvent.input(screen.getByLabelText('电话'), { target: { value: '132' } });
-		await fireEvent.click(screen.getByRole('button', { name: '预览信息' }));
+		await fireEvent.click(screen.getByRole('button', { name: '保存信息' }));
 		await fireEvent.click(screen.getByRole('button', { name: '确认提交' }));
 
 		expect(await screen.findByText('第一次失败')).toBeInTheDocument();

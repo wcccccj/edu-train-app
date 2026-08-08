@@ -1,5 +1,6 @@
 <script lang="ts">
-	import type { SectionedFormSchema } from './form.types';
+	import { z } from 'zod';
+	import type { SectionedFormSchema, FormValues, FormField, FormSection } from './form.types';
 
 	let {
 		schema,
@@ -10,18 +11,18 @@
 		cancelText = '取消'
 	} = $props<{
 		schema: SectionedFormSchema;
-		initialData?: Record<string, any>;
-		onSubmit: (data: Record<string, any>) => void;
+		initialData?: FormValues;
+		onSubmit: (data: FormValues) => void;
 		onCancel?: () => void;
 		submitText?: string;
 		cancelText?: string;
 	}>();
 
-	let formData = $state<Record<string, any>>(
+	let formData = $state<FormValues>(
 		(() => {
 			const data = $state.snapshot(initialData) || {};
-			schema.sections.forEach((sec) => {
-				sec.fields.forEach((f) => {
+			schema.sections.forEach((sec: FormSection) => {
+				sec.fields.forEach((f: FormField) => {
 					if (data[f.name] === undefined) {
 						if (f.type === 'select' && f.options && f.options.length === 1) {
 							data[f.name] = f.options[0].value;
@@ -40,7 +41,7 @@
 		const result = schema.validationSchema.safeParse(formData);
 		if (!result.success) {
 			const newErrors: Record<string, string> = {};
-			result.error.issues.forEach((e) => {
+			result.error.issues.forEach((e: z.ZodIssue) => {
 				if (e.path && e.path[0]) {
 					newErrors[e.path[0].toString()] = e.message;
 				}
@@ -59,7 +60,7 @@
 		}
 	}
 
-	function handleInput(name: string, value: any) {
+	function handleInput(name: string, value: string) {
 		formData[name] = value;
 		if (errors[name]) {
 			errors[name] = '';
@@ -67,7 +68,7 @@
 	}
 </script>
 
-{#snippet sectionFields(section)}
+{#snippet sectionFields(section: FormSection)}
 	{#each section.fields as field (field.name)}
 		<div class="flex flex-col gap-1.5 {field.fullWidth ? 'sm:col-span-2' : ''}">
 			<label for={field.name} class="flex gap-1 text-sm font-medium text-slate-700">
@@ -88,7 +89,7 @@
 				>
 					<option value="" disabled hidden>请选择{field.label}</option>
 					{#if field.options}
-						{#each field.options as option}
+						{#each field.options as option (option.value)}
 							<option value={option.value}>{option.label}</option>
 						{/each}
 					{/if}

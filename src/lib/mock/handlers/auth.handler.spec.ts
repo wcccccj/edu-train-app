@@ -9,7 +9,7 @@ describe('Auth API Endpoints', () => {
 		// but userStore has seed data which is fine.
 	});
 
-	function createMockEvent(body: any): RequestEvent {
+	function createMockEvent(body: Record<string, unknown>): RequestEvent {
 		return {
 			request: {
 				json: vi.fn().mockResolvedValue(body)
@@ -18,7 +18,7 @@ describe('Auth API Endpoints', () => {
 				set: vi.fn(),
 				get: vi.fn()
 			}
-		} as any;
+		} as unknown as RequestEvent;
 	}
 
 	describe('POST /api/auth/login', () => {

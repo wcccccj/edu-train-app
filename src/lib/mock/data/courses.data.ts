@@ -51,7 +51,10 @@ function buildCourse(seed: SeedCourse): Course {
 		name: loc.name,
 		address: loc.name,
 		capacity: loc.capacity ?? 0,
-		enrolled: Math.min(loc.capacity ?? 0, Math.floor((seed.enrolled * (i + 1)) / Math.max(1, seed.locations.length)))
+		enrolled: Math.min(
+			loc.capacity ?? 0,
+			Math.floor((seed.enrolled * (i + 1)) / Math.max(1, seed.locations.length))
+		)
 	}));
 
 	const timeSlots = seed.type === 'online' ? [] : [`${startDate} 至 ${endDate}（周一至周五）`];
