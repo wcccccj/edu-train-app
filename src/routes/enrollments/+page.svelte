@@ -20,6 +20,7 @@
 	import { messageStore } from '$lib/components/message/message.store.svelte';
 	import DataTable from '$lib/components/table/DataTable.svelte';
 	import type { Column } from '$lib/components/table/table.types';
+	import Modal from '$lib/components/Modal.svelte';
 
 	type FilterType = 'all' | 'online' | 'offline';
 
@@ -298,48 +299,22 @@
 </div>
 
 {#if editingApp}
-	<div class="fixed inset-0 z-40 flex items-center justify-center p-4">
-		<!-- svelte-ignore a11y_click_events_have_key_events -->
-		<!-- svelte-ignore a11y_no_static_element_interactions -->
-		<div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onclick={closeEdit}></div>
-
-		<div
-			class="relative flex max-h-[90vh] w-full max-w-lg flex-col overflow-hidden border border-slate-200 bg-white shadow-xl"
-		>
-			<div class="flex shrink-0 items-center justify-between border-b border-slate-100 p-5">
-				<h2 class="text-lg font-semibold text-slate-900">修改报名信息</h2>
-				<button
-					onclick={closeEdit}
-					class="text-slate-400 transition-colors hover:text-slate-600"
-					aria-label="关闭"
-				>
-					<svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-						><path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							stroke-width="2"
-							d="M6 18L18 6M6 6l12 12"
-						></path></svg
-					>
-				</button>
-			</div>
-
-			<div class="shrink-0 border-b border-slate-100 bg-slate-50 p-5">
+	<Modal title="修改报名信息" onClose={closeEdit}>
+		{#snippet header()}
+			{#if editingApp}
 				<p class="text-sm font-medium text-slate-700">{editingApp.courseName}</p>
 				<p class="mt-1 text-xs text-slate-500">
 					{TYPE_LABEL[editingApp.type]} · {formatStartTime(editingApp.startTime)}
 				</p>
-			</div>
+			{/if}
+		{/snippet}
 
-			<div class="overflow-y-auto p-6">
-				<DynamicForm
-					schema={buildEditSchema(editingApp)}
-					initialData={getEditInitialData(editingApp)}
-					onSubmit={handleEditSubmit}
-					onCancel={closeEdit}
-					submitText="保存修改"
-				/>
-			</div>
-		</div>
-	</div>
+		<DynamicForm
+			schema={buildEditSchema(editingApp!)}
+			initialData={getEditInitialData(editingApp!)}
+			onSubmit={handleEditSubmit}
+			onCancel={closeEdit}
+			submitText="保存修改"
+		/>
+	</Modal>
 {/if}

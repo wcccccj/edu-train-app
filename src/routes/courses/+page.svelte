@@ -5,6 +5,8 @@
 	import { enrollmentsStore } from '$lib/stores/enrollments.store.svelte';
 	import { getUserId } from '$lib/types/user.types';
 	import { userCache } from '$lib/utils/user-cache';
+	import { formatStartTime } from '$lib/utils/enrollment-display';
+	import dayjs from 'dayjs';
 	import CourseCard from '$lib/components/CourseCard.svelte';
 	import Notification from './components/Notification.svelte';
 	import Pagination from '$lib/components/Pagination.svelte';
@@ -19,7 +21,7 @@
 	import type { Course as ApiCourse } from '$lib/types/course.types';
 	import Message from '$lib/components/message/Message.svelte';
 	import { messageStore } from '$lib/components/message/message.store.svelte';
-	import { fade, fly } from 'svelte/transition';
+	import Modal from '$lib/components/Modal.svelte';
 
 	let { data } = $props();
 
@@ -146,7 +148,7 @@
 				courseId: activeCourse.id,
 				courseName: activeCourse.title,
 				type: activeCourse.type,
-				applyDate: new Date().toISOString().slice(0, 10),
+				applyDate: dayjs().format('YYYY-MM-DD'),
 				status: 'pending',
 				name: data.name as string,
 				phone: data.phone as string,
@@ -161,9 +163,12 @@
 		toastStore.add('报名成功！期待您的参与', 'success');
 	}
 
-	let formattedStartTime = $derived(
-		activeCourse ? new Date(activeCourse.startTime).toLocaleString('zh-CN') : ''
-	);
+	let formattedStartTime = $derived(activeCourse ? formatStartTime(activeCourse.startTime) : '');
+
+	/** 地点容量是否有效正数（决定是否渲染「限 N 人」徽章） */
+	function hasValidCapacity(loc: { capacity?: number }): boolean {
+		return typeof loc.capacity === 'number' && Number.isFinite(loc.capacity) && loc.capacity > 0;
+	}
 </script>
 
 <Notification />
@@ -206,43 +211,15 @@
 </div>
 
 {#if activeCourse && schema}
-	<div
-		class="fixed inset-0 z-40 flex items-center justify-center p-4"
-		transition:fade={{ duration: 150 }}
-	>
-		<!-- svelte-ignore a11y_click_events_have_key_events -->
-		<!-- svelte-ignore a11y_no_static_element_interactions -->
-		<div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onclick={closeEnrollment}></div>
-
-		<div
-			class="relative flex max-h-[90vh] w-full max-w-2xl flex-col overflow-hidden border border-slate-200 bg-white shadow-xl"
-			transition:fly={{ y: 20, duration: 200 }}
-		>
-			<div class="flex shrink-0 items-center justify-between border-b border-slate-100 p-5">
-				<h2 class="text-lg font-semibold text-slate-900">课程报名</h2>
-				<button
-					onclick={closeEnrollment}
-					class="text-slate-400 transition-colors hover:text-slate-600"
-					aria-label="关闭"
-				>
-					<svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-						><path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							stroke-width="2"
-							d="M6 18L18 6M6 6l12 12"
-						></path></svg
-					>
-				</button>
-			</div>
-
-			<div class="shrink-0 border-b border-slate-100 bg-slate-50 p-5">
+	<Modal title="课程报名" onClose={closeEnrollment} maxWidth="2xl">
+		{#snippet header()}
+			{#if activeCourse}
 				<p class="text-sm font-medium text-slate-600">{activeCourse.title}</p>
 				<p class="mt-1 text-xs text-slate-500">{formattedStartTime}</p>
 				{#if activeCourse.locations.length === 1}
 					<p class="mt-1 text-xs text-slate-500">
 						📍 {activeCourse.locations[0].name}
-						{#if typeof activeCourse.locations[0].capacity === 'number' && Number.isFinite(activeCourse.locations[0].capacity) && activeCourse.locations[0].capacity > 0}
+						{#if hasValidCapacity(activeCourse.locations[0])}
 							<span class="ml-1 text-blue-700">（限 {activeCourse.locations[0].capacity} 人）</span>
 						{/if}
 					</p>
@@ -252,24 +229,22 @@
 							<li class="flex items-start gap-1 text-xs text-slate-500">
 								<span>📍</span>
 								<span class="flex-1 leading-4">{loc.name}</span>
-								{#if typeof loc.capacity === 'number' && Number.isFinite(loc.capacity) && loc.capacity > 0}
+								{#if hasValidCapacity(loc)}
 									<span class="shrink-0 text-blue-700">（限 {loc.capacity} 人）</span>
 								{/if}
 							</li>
 						{/each}
 					</ul>
 				{/if}
-			</div>
+			{/if}
+		{/snippet}
 
-			<div class="overflow-y-auto p-6">
-				<EnrollmentFlow
-					{schema}
-					sessionKey={`enrollment_${activeCourse.id}`}
-					initialData={getInitialData()}
-					onComplete={handleEnrollmentComplete}
-					onCancel={closeEnrollment}
-				/>
-			</div>
-		</div>
-	</div>
+		<EnrollmentFlow
+			{schema}
+			sessionKey={`enrollment_${activeCourse.id}`}
+			initialData={getInitialData()}
+			onComplete={handleEnrollmentComplete}
+			onCancel={closeEnrollment}
+		/>
+	</Modal>
 {/if}

@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/svelte';
+import dayjs from 'dayjs';
 import CourseCard, {
 	type CourseCardCourse,
 	type CourseCardRegistration,
@@ -71,12 +72,7 @@ function buildProps(overrides: Partial<CourseCardProps> = {}): CourseCardProps {
 }
 
 function formatDateCN(iso: string) {
-	return new Date(iso).toLocaleString('zh-CN', {
-		month: 'short',
-		day: 'numeric',
-		hour: '2-digit',
-		minute: '2-digit'
-	});
+	return dayjs(iso).format('M月D日 HH:mm');
 }
 
 describe('CourseCard 组件 · 培训地点展示优化', () => {

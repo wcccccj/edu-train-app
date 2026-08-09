@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { maskPhone, resolveLocation, formatStartTime } from './enrollment-display';
+import dayjs from 'dayjs';
 
 describe('maskPhone', () => {
 	it('should mask the middle 4 digits of a valid 11-digit phone number', () => {
@@ -33,7 +34,7 @@ describe('resolveLocation', () => {
 describe('formatStartTime', () => {
 	it('should format a valid ISO start time to a readable local string', () => {
 		const iso = '2026-09-01T09:00:00';
-		expect(formatStartTime(iso)).toBe(new Date(iso).toLocaleString('zh-CN'));
+		expect(formatStartTime(iso)).toBe(dayjs(iso).format('YYYY-MM-DD HH:mm'));
 	});
 
 	it('should return a placeholder for missing or invalid start time', () => {

@@ -2,12 +2,14 @@ import '@testing-library/jest-dom';
 import { vi } from 'vitest';
 
 // Mock Web Animations API
+// 注意：使用普通函数而非 vi.fn()，避免 vi.resetAllMocks() 将其重置为返回 undefined，
+// 否则 Svelte 过渡动画在 animation 为 undefined 时赋值 onfinish 会抛异常。
 if (typeof Element !== 'undefined') {
-	Element.prototype.animate = vi.fn().mockReturnValue({
+	Element.prototype.animate = () => ({
 		finished: Promise.resolve(),
-		cancel: vi.fn(),
-		play: vi.fn(),
-		pause: vi.fn(),
+		cancel: () => {},
+		play: () => {},
+		pause: () => {},
 		set onfinish(cb: () => void) {
 			setTimeout(cb, 0);
 		}

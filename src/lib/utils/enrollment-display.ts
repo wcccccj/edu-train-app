@@ -4,6 +4,7 @@
  * 集中处理 /enrollments 页面中的展示逻辑：手机号脱敏、培训地点、
  * 开始时间格式化，便于单元测试覆盖纯逻辑。
  */
+import dayjs from 'dayjs';
 
 /** 手机号脱敏：对 11 位手机号隐藏中间 4 位（如 138****5678） */
 export function maskPhone(phone: string | undefined): string {
@@ -19,10 +20,13 @@ export function resolveLocation(type: string | undefined, location?: string): st
 	return location || '—';
 }
 
-/** 开始时间格式化：ISO 字符串转为本地可读格式 */
+/**
+ * 开始时间格式化：ISO 字符串转为可读的本地格式（YYYY-MM-DD HH:mm）。
+ * 缺失或非法字符串统一返回占位符「—」，避免展示异常或抛出错误。
+ */
 export function formatStartTime(startTime?: string): string {
 	if (!startTime) return '—';
-	const date = new Date(startTime);
-	if (Number.isNaN(date.getTime())) return '—';
-	return date.toLocaleString('zh-CN');
+	const date = dayjs(startTime);
+	if (!date.isValid()) return '—';
+	return date.format('YYYY-MM-DD HH:mm');
 }

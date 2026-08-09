@@ -1,4 +1,6 @@
 <script lang="ts">
+	import dayjs from 'dayjs';
+
 	export interface CourseLocation {
 		name: string;
 		capacity?: number;
@@ -36,17 +38,15 @@
 
 	let isFull = $derived(registeredCount >= course.capacity);
 
-	let timeUntilStart = $derived(new Date(course.startTime).getTime() - Date.now());
+	let timeUntilStart = $derived(dayjs(course.startTime).valueOf() - Date.now());
 	let isPast = $derived(timeUntilStart < 0);
 
-	let formattedDate = $derived(
-		new Date(course.startTime).toLocaleString('zh-CN', {
-			month: 'short',
-			day: 'numeric',
-			hour: '2-digit',
-			minute: '2-digit'
-		})
-	);
+	/** 开始时间展示：非法字符串回退为空串，避免页面出现异常或错误格式 */
+	let formattedDate = $derived.by(() => {
+		const d = dayjs(course.startTime);
+		if (!d.isValid()) return '';
+		return d.format('M月D日 HH:mm');
+	});
 
 	function hasValidCapacity(loc: CourseLocation): boolean {
 		return typeof loc.capacity === 'number' && Number.isFinite(loc.capacity) && loc.capacity > 0;
