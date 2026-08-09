@@ -5,7 +5,8 @@ import { vi } from 'vitest';
 // 注意：使用普通函数而非 vi.fn()，避免 vi.resetAllMocks() 将其重置为返回 undefined，
 // 否则 Svelte 过渡动画在 animation 为 undefined 时赋值 onfinish 会抛异常。
 if (typeof Element !== 'undefined') {
-	Element.prototype.animate = () => ({
+	// 通过类型断言满足 Element.animate 的 Animation 返回类型（happy-dom 缺少完整实现）
+	Element.prototype.animate = (() => ({
 		finished: Promise.resolve(),
 		cancel: () => {},
 		play: () => {},
@@ -13,7 +14,7 @@ if (typeof Element !== 'undefined') {
 		set onfinish(cb: () => void) {
 			setTimeout(cb, 0);
 		}
-	});
+	})) as unknown as typeof Element.prototype.animate;
 }
 
 // Mock matchMedia
