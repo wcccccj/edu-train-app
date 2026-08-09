@@ -77,9 +77,11 @@ describe('Reports Page', () => {
 		expect(getByText('热门课程排行 (Top 5)')).toBeInTheDocument();
 		expect(getByText('培训类型分布')).toBeInTheDocument();
 		expect(getByText('各部门参与人次')).toBeInTheDocument();
+		expect(getByText('近30天报名趋势')).toBeInTheDocument();
+		expect(getByText('过去12个月报名分布')).toBeInTheDocument();
 
-		// 验证图表被初始化 3 次 (3个 Chart 组件)
-		expect(mockInit).toHaveBeenCalledTimes(3);
+		// 验证图表被初始化 5 次 (5个 Chart 组件)
+		expect(mockInit).toHaveBeenCalledTimes(5);
 	});
 
 	it('should filter course ranking by type when clicking filter buttons', async () => {

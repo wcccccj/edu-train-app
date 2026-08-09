@@ -1,11 +1,14 @@
 <script lang="ts">
+	import { SvelteDate } from 'svelte/reactivity';
 	import type { PageData } from './$types';
 	import type { CourseType } from '$lib/types/course.types';
 	import Chart from '$lib/components/Chart.svelte';
 	import {
 		getCourseRankingOption,
 		getTypeDistributionOption,
-		getDepartmentDistributionOption
+		getDepartmentDistributionOption,
+		getDailyTrendOption,
+		getCalendarHeatmapOption
 	} from '$lib/components/charts/chart-options';
 
 	let { data }: { data: PageData } = $props();
@@ -53,6 +56,53 @@
 			data.stats.departmentDistribution.map((item) => item.count)
 		)
 	);
+
+	// 双轴组合图：近30天报名趋势 (mock 数据)
+	const DAILY_TREND_DAYS = 30;
+	const dailyDates: string[] = [];
+	const dailyCounts: number[] = [];
+	const dailyGrowthRates: number[] = [];
+
+	// 以当前日期为终点，向前生成近 30 天
+	for (let i = DAILY_TREND_DAYS - 1; i >= 0; i--) {
+		const d = new SvelteDate();
+		d.setDate(d.getDate() - i);
+		dailyDates.push(`${d.getMonth() + 1}/${d.getDate()}`);
+	}
+	// 使用带随机波动的 mock 报名人数（整体呈上升趋势，突出上升势头）
+	let prev = 15;
+	for (let i = 0; i < DAILY_TREND_DAYS; i++) {
+		const count = Math.max(4, Math.round(prev + (Math.random() - 0.35) * 10));
+		dailyCounts.push(count);
+		const growth = i === 0 ? 0 : Math.round(((count - prev) / prev) * 100);
+		dailyGrowthRates.push(growth);
+		prev = count;
+	}
+
+	let dailyTrendOption = $derived(getDailyTrendOption(dailyDates, dailyCounts, dailyGrowthRates));
+
+	// 日历热力图：过去12个月报名分布 (mock 数据)
+	// 以今天为终点，向前滚动 12 个月
+	const now = new Date();
+	const heatmapStart = new Date(now.getFullYear(), now.getMonth() - 11, 1);
+	const pad2 = (n: number) => String(n).padStart(2, '0');
+	const rangeStart = `${heatmapStart.getFullYear()}-${pad2(heatmapStart.getMonth() + 1)}`;
+	const rangeEnd = `${now.getFullYear()}-${pad2(now.getMonth() + 1)}`;
+
+	const heatmapData: [string, number][] = [];
+	for (let d = new SvelteDate(heatmapStart); d <= now; d.setDate(d.getDate() + 1)) {
+		const dateStr = `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
+		// 暑期(7-8月)与年末(12月)为报名爆发期，数值更高
+		const month = d.getMonth() + 1;
+		let base = 20;
+		if (month === 7 || month === 8) base = 80;
+		else if (month === 12) base = 70;
+		else if (month >= 3 && month <= 6) base = 45;
+		const value = Math.max(0, Math.min(100, Math.round(base + (Math.random() - 0.5) * 30)));
+		heatmapData.push([dateStr, value]);
+	}
+
+	let calendarHeatmapOption = $derived(getCalendarHeatmapOption(heatmapData, rangeStart, rangeEnd));
 
 	const filterOptions: FilterType[] = ['all', 'online', 'offline', 'hybrid'];
 </script>
@@ -164,6 +214,28 @@
 						<Chart options={departmentDistributionOption} />
 					</div>
 				{/if}
+			</div>
+
+			<!-- 近30天报名趋势：双轴组合图 -->
+			<div class="rounded-xl border border-slate-200 bg-white p-6 lg:col-span-2">
+				<div class="mb-2 flex flex-wrap items-center justify-between gap-2">
+					<h3 class="text-lg font-bold text-slate-800">近30天报名趋势</h3>
+					<span class="text-sm text-slate-400">柱状：每日报名人数 | 折线：日环比增长率</span>
+				</div>
+				<div class="h-[380px]">
+					<Chart options={dailyTrendOption} />
+				</div>
+			</div>
+
+			<!-- 过去12个月报名分布：日历热力图 -->
+			<div class="rounded-xl border border-slate-200 bg-white p-6 lg:col-span-2">
+				<div class="mb-2 flex flex-wrap items-center justify-between gap-2">
+					<h3 class="text-lg font-bold text-slate-800">过去12个月报名分布</h3>
+					<span class="text-sm text-slate-400">颜色越深代表报名越集中</span>
+				</div>
+				<div class="h-[360px]">
+					<Chart options={calendarHeatmapOption} />
+				</div>
 			</div>
 		</section>
 	</div>
