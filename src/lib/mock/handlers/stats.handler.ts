@@ -5,9 +5,9 @@ import { userStore } from '../store/users.store';
 
 export function getStatsOverview(userId: string): StatsOverview {
 	const allApps = applicationStore.listAll();
-	
+
 	// KPI (只统计当前用户的申请)
-	const myApps = allApps.filter(a => a.userId === userId);
+	const myApps = allApps.filter((a) => a.userId === userId);
 	const totalApplications = myApps.length;
 	let pendingCount = 0;
 	let approvedCount = 0;
@@ -19,9 +19,8 @@ export function getStatsOverview(userId: string): StatsOverview {
 		else if (app.status === 'completed') completedCount++;
 	}
 
-	const completionRate = totalApplications === 0 
-		? 0 
-		: Math.round((completedCount / totalApplications) * 100);
+	const completionRate =
+		totalApplications === 0 ? 0 : Math.round((completedCount / totalApplications) * 100);
 
 	const kpi = {
 		totalApplications,
@@ -32,12 +31,16 @@ export function getStatsOverview(userId: string): StatsOverview {
 	};
 
 	// 报表数据 (统计全量数据，用于图表展示)
-	// 1. 课程热度排行 (前 5)
+	// 1. 课程热度排行：返回全量并附带 type，供前端按类型筛选后再取 Top 5
 	const allCourses = courseStore.listAll();
 	const courseRanking = allCourses
-		.map(c => ({ courseId: c.id, courseName: c.name, enrolled: c.enrolled }))
-		.sort((a, b) => b.enrolled - a.enrolled)
-		.slice(0, 5);
+		.map((c) => ({
+			courseId: c.id,
+			courseName: c.name,
+			enrolled: c.enrolled,
+			type: c.type
+		}))
+		.sort((a, b) => b.enrolled - a.enrolled);
 
 	// 2. 培训类型分布
 	const typeCount = { online: 0, offline: 0, hybrid: 0 };
@@ -54,7 +57,7 @@ export function getStatsOverview(userId: string): StatsOverview {
 	const deptCount: Record<string, number> = {};
 	for (const app of allApps) {
 		const user = userStore.findById(app.userId);
-		if (user) {
+		if (user && user.department) {
 			deptCount[user.department] = (deptCount[user.department] ?? 0) + 1;
 		}
 	}

@@ -36,7 +36,10 @@ class LocationStore {
 	private withLock<T>(id: string, fn: () => Promise<T>): Promise<T> {
 		const prev = this.chains.get(id) ?? Promise.resolve();
 		const next = prev.then(fn, fn);
-		this.chains.set(id, next.catch(() => undefined));
+		this.chains.set(
+			id,
+			next.catch(() => undefined)
+		);
 		return next;
 	}
 
@@ -56,7 +59,7 @@ class LocationStore {
 			if (loc.enrolled >= loc.capacity) {
 				return { ok: false, reason: 'full', current: { ...loc } };
 			}
-			
+
 			// 模拟轻微的网络延迟与处理耗时
 			await new Promise((resolve) => setTimeout(resolve, 5 + Math.random() * 10));
 

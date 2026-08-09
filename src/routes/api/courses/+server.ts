@@ -2,7 +2,7 @@
  * GET /api/courses
  * 公开接口，查询课程列表（关键词/类型/状态/分页）
  */
-import { json, error } from '@sveltejs/kit';
+import { error } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { isMockEnabled, listCourses, logRequest, ok } from '$lib/mock';
 import type { CourseType, CourseStatus } from '$lib/types/course.types';

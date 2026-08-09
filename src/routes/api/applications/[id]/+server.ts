@@ -5,7 +5,16 @@
  */
 import { error } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { isMockEnabled, requireUser, getApplication, updateApplication, deleteApplication, logRequest, ok, fail } from '$lib/mock';
+import {
+	isMockEnabled,
+	requireUser,
+	getApplication,
+	updateApplication,
+	deleteApplication,
+	logRequest,
+	ok,
+	fail
+} from '$lib/mock';
 import type { ApplicationUpdatePayload } from '$lib/types/application.types';
 
 export const GET: RequestHandler = async (event) => {
@@ -29,10 +38,10 @@ export const GET: RequestHandler = async (event) => {
 export const PUT: RequestHandler = async (event) => {
 	const start = Date.now();
 	if (!isMockEnabled()) throw error(404, 'Not Found');
-	
+
 	const user = requireUser(event);
 	const id = event.params.id;
-	
+
 	let payload: ApplicationUpdatePayload;
 	try {
 		payload = await event.request.json();
@@ -41,7 +50,7 @@ export const PUT: RequestHandler = async (event) => {
 	}
 
 	const res = updateApplication(user.id, id, payload);
-	
+
 	if (!res.ok) {
 		logRequest('PUT', event.url.pathname, 400, Date.now() - start, res.reason);
 		if (res.reason === 'forbidden') return fail('FORBIDDEN', '无权修改此申请');
@@ -57,12 +66,12 @@ export const PUT: RequestHandler = async (event) => {
 export const DELETE: RequestHandler = async (event) => {
 	const start = Date.now();
 	if (!isMockEnabled()) throw error(404, 'Not Found');
-	
+
 	const user = requireUser(event);
 	const id = event.params.id;
-	
+
 	const res = deleteApplication(user.id, id);
-	
+
 	if (!res.ok) {
 		logRequest('DELETE', event.url.pathname, 400, Date.now() - start, res.reason);
 		if (res.reason === 'forbidden') return fail('FORBIDDEN', '无权撤销此申请');

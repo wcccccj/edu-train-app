@@ -7,7 +7,10 @@ export const DEFAULT_PAGE = 1;
 export const DEFAULT_PAGE_SIZE = 10;
 export const MAX_PAGE_SIZE = 100;
 
-export function normalizePage(page: number | undefined, pageSize: number | undefined): { page: number; pageSize: number } {
+export function normalizePage(
+	page: number | undefined,
+	pageSize: number | undefined
+): { page: number; pageSize: number } {
 	const p = Math.max(1, Math.floor(page ?? DEFAULT_PAGE));
 	const s = Math.min(MAX_PAGE_SIZE, Math.max(1, Math.floor(pageSize ?? DEFAULT_PAGE_SIZE)));
 	return { page: p, pageSize: s };

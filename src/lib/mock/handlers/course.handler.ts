@@ -25,10 +25,10 @@ export function listCourses(query: CourseQuery): Page<Course> {
 	if (status) {
 		items = items.filter((c) => c.status === status);
 	}
-	
+
 	// 按热度（报名人数）降序排列
 	items.sort((a, b) => b.enrolled - a.enrolled);
-	
+
 	return paginate(items, page, pageSize);
 }
 

@@ -4,7 +4,15 @@
  */
 import { error } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { isMockEnabled, requireUser, listApplications, createApplication, logRequest, ok, fail } from '$lib/mock';
+import {
+	isMockEnabled,
+	requireUser,
+	listApplications,
+	createApplication,
+	logRequest,
+	ok,
+	fail
+} from '$lib/mock';
 import type { ApplicationStatus, ApplicationCreatePayload } from '$lib/types/application.types';
 
 export const GET: RequestHandler = async (event) => {
@@ -29,7 +37,7 @@ export const GET: RequestHandler = async (event) => {
 export const POST: RequestHandler = async (event) => {
 	const start = Date.now();
 	if (!isMockEnabled()) throw error(404, 'Not Found');
-	
+
 	const user = requireUser(event);
 	let payload: ApplicationCreatePayload;
 	try {
@@ -39,7 +47,7 @@ export const POST: RequestHandler = async (event) => {
 	}
 
 	const res = await createApplication(user.id, payload);
-	
+
 	if (!res.ok) {
 		logRequest('POST', event.url.pathname, 400, Date.now() - start, res.reason);
 		if (res.reason === 'cas_conflict' || res.reason === 'full') {

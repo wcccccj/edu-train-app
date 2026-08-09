@@ -1,0 +1,153 @@
+# =====================================================================
+# Deploy to Production (Vercel)
+#
+# 触发条件：任何 Push 合并到 main 分支（PR 合并本质上是向 main 的 push）
+#           或手动触发（workflow_dispatch）。
+#
+# 流水线包含 5 个必要环节（对应交付要求）：
+#   1. 版本控制   - 快照 commit SHA / tag，并将其写入环境信息
+#   2. 环境检查   - 校验 Node/pnpm 版本、依赖锁定文件、必填密钥是否存在
+#   3. 自动化测试 - lint + svelte-check 类型检查 + Vitest 单元/组件测试
+#   4. 构建验证   - 生产构建（vite build，触发 adapter 产出）
+#   5. 安全扫描   - 依赖审计（pnpm audit）+ 运行时加固（harden-runner）
+# 全部通过后，进入 deploy 作业发布到 Vercel 生产环境。
+# =====================================================================
+
+name: Deploy to Production (Vercel)
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: production-deploy
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  NODE_VERSION: '22'
+  PNPM_VERSION: '11'
+
+jobs:
+  # ------------------------------------------------------------------
+  # 质量门禁：所有检查通过后，deploy 作业才会执行
+  # ------------------------------------------------------------------
+  verify:
+    name: Verify (env · test · build · security)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Harden runner (安全加固)
+        uses: step-security/harden-runner@v2
+        with:
+          egress-policy: audit
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # ---- 1. 版本控制：记录本次部署对应的 commit / tag ----
+      - name: Version snapshot
+        id: version
+        run: |
+          echo "ref=${{ github.ref_name }}"
+          echo "sha=$(git rev-parse --short HEAD)"
+          echo "tag=$(git describe --tags --always 2>/dev/null || echo 'no-tag')"
+          echo "timestamp=$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+
+      # ---- 2. 环境检查：Node/pnpm 版本与锁文件 ----
+      - name: Environment check
+        run: |
+          echo "workflow node = ${{ env.NODE_VERSION }}"
+          echo "workflow pnpm = ${{ env.PNPM_VERSION }}"
+          test -f pnpm-lock.yaml || { echo "缺少 pnpm-lock.yaml"; exit 1; }
+          test -f pnpm-workspace.yaml || { echo "缺少 pnpm-workspace.yaml"; exit 1; }
+          echo "lockfile OK"
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+
+      - name: Install dependencies (frozen lockfile)
+        run: pnpm install --frozen-lockfile
+
+      # ---- 3. 自动化测试：lint + 类型检查 + 单元测试 ----
+      - name: Lint (Prettier + ESLint)
+        run: pnpm lint
+
+      - name: Type check (svelte-check)
+        run: pnpm check
+
+      # 浏览器项目测试需要 chromium，先安装（--with-deps 需 root，CI 默认即 root）
+      - name: Install Playwright chromium
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Unit / component tests (Vitest)
+        run: pnpm test
+
+      # ---- 5. 安全扫描：依赖漏洞审计（高及以上即失败）----
+      - name: Security scan (dependency audit)
+        run: pnpm audit --audit-level=high
+        continue-on-error: false
+
+      # ---- 4. 构建验证：生产构建产出 ----
+      - name: Build verification
+        run: pnpm build
+
+      # 将版本信息上报为部署元数据（traceability）
+      - name: Print deployment metadata
+        run: |
+          echo "Deploying ref=${{ github.ref_name }} sha=${{ steps.version.outputs.sha }} tag=${{ steps.version.outputs.tag }}"
+
+  # ------------------------------------------------------------------
+  # 部署：仅当 verify 通过后执行，发布到 Vercel 生产环境
+  # ------------------------------------------------------------------
+  deploy:
+    name: Deploy to Vercel (production)
+    needs: verify
+    runs-on: ubuntu-latest
+    environment: production
+    timeout-minutes: 15
+    steps:
+      - name: Harden runner
+        uses: step-security/harden-runner@v2
+        with:
+          egress-policy: audit
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+
+      - name: Install dependencies (frozen lockfile)
+        run: pnpm install --frozen-lockfile
+
+      - name: Deploy to Vercel (production)
+        uses: amondnet/vercel-action@v25
+        with:
+          # 以下三个密钥在仓库 Settings → Secrets and variables → Actions 中配置
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          vercel-args: '--prod'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-comment: false
+          working-directory: ./

@@ -33,7 +33,7 @@ function buildLocations(seed: number): Course['locations'] {
 			name: loc.name,
 			address: loc.address,
 			capacity,
-			enrolled: isFull ? capacity : Math.floor(capacity * ((seed + i) % 80) / 100)
+			enrolled: isFull ? capacity : Math.floor((capacity * ((seed + i) % 80)) / 100)
 		};
 	});
 	return selected;
@@ -53,28 +53,26 @@ function deriveStatus(enrolled: number, max: number, startDate: string): CourseS
 export function generateCourses(count = 30): Course[] {
 	const list: Course[] = [];
 	const now = Date.now();
-	
+
 	for (let i = 0; i < count; i++) {
 		const id = 1001 + i;
 		const seed = i + 1;
 		const type = (['online', 'offline', 'hybrid'] as CourseType[])[seed % 3];
 		const category = COURSE_CATEGORIES[seed % COURSE_CATEGORIES.length];
-		const maxStudents = 20 + (seed * 7) % 80;
-		
+		const maxStudents = 20 + ((seed * 7) % 80);
+
 		// 使得大约 2/3 的课程在未来（未过期），1/3 的课程在过去
 		const isFuture = seed % 3 !== 0;
 		const offsetFromNow = (seed * 13) % 90; // 0 到 90 天
-		const startTimestamp = isFuture 
-			? now + offsetFromNow * 86400_000 
+		const startTimestamp = isFuture
+			? now + offsetFromNow * 86400_000
 			: now - (offsetFromNow + 10) * 86400_000;
-			
+
 		const startDate = new Date(startTimestamp).toISOString().slice(0, 10);
 		const offsetDays = 3 + (seed % 5);
-		const endDate = new Date(startTimestamp + offsetDays * 86400_000)
-			.toISOString()
-			.slice(0, 10);
-			
-		const enrolled = Math.min(maxStudents, Math.floor(maxStudents * ((seed * 13) % 100) / 100));
+		const endDate = new Date(startTimestamp + offsetDays * 86400_000).toISOString().slice(0, 10);
+
+		const enrolled = Math.min(maxStudents, Math.floor((maxStudents * ((seed * 13) % 100)) / 100));
 		const status = deriveStatus(enrolled, maxStudents, startDate);
 		const desc = Mock.mock('@cparagraph(2, 4)');
 		const locations = type === 'online' ? [] : buildLocations(seed);

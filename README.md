@@ -63,12 +63,12 @@ src/lib/mock/
 
 ### 环境开关
 
-| 环境 | MOCK 状态 | 控制方式 |
-|---|---|---|
-| `pnpm dev` | **启用** | 默认 |
-| `pnpm build` + `pnpm preview` | **关闭** | 默认 |
-| 任意环境强制启用 | 启用 | 设置 `MOCK_FORCE=true` |
-| 任意环境显式关闭 | 关闭 | 设置 `MOCK_ENABLED=false` |
+| 环境                          | MOCK 状态 | 控制方式                  |
+| ----------------------------- | --------- | ------------------------- |
+| `pnpm dev`                    | **启用**  | 默认                      |
+| `pnpm build` + `pnpm preview` | **关闭**  | 默认                      |
+| 任意环境强制启用              | 启用      | 设置 `MOCK_FORCE=true`    |
+| 任意环境显式关闭              | 关闭      | 设置 `MOCK_ENABLED=false` |
 
 关闭时所有 mock 路由返回 404，前端会回落到真实接口（待对接）。
 
@@ -82,20 +82,20 @@ src/lib/mock/
 
 ### API 端点速查
 
-| 方法 | 路径 | 鉴权 | 说明 |
-|---|---|---|---|
-| GET | `/api/courses` | 公开 | 课程列表（分页/搜索/筛选） |
-| GET | `/api/courses/:id` | 公开 | 课程详情 |
-| GET | `/api/locations?courseId=` | 公开 | 课程关联地点 |
-| GET | `/api/schemas/:category` | 公开 | 动态表单 schema |
-| GET | `/api/users` | 公开 | 可切换用户列表 |
-| GET | `/api/auth/me` | 公开 | 当前用户信息 |
-| GET | `/api/applications` | 必填 | 我的申请 |
-| POST | `/api/applications` | 必填 | 提交报名 |
-| GET | `/api/applications/:id` | 必填+归属 | 申请详情 |
-| PUT | `/api/applications/:id` | 必填+归属+锁定 | 修改 |
-| DELETE | `/api/applications/:id` | 必填+归属 | 撤销 |
-| GET | `/api/stats` | 公开 | 统计报表 |
+| 方法   | 路径                       | 鉴权           | 说明                       |
+| ------ | -------------------------- | -------------- | -------------------------- |
+| GET    | `/api/courses`             | 公开           | 课程列表（分页/搜索/筛选） |
+| GET    | `/api/courses/:id`         | 公开           | 课程详情                   |
+| GET    | `/api/locations?courseId=` | 公开           | 课程关联地点               |
+| GET    | `/api/schemas/:category`   | 公开           | 动态表单 schema            |
+| GET    | `/api/users`               | 公开           | 可切换用户列表             |
+| GET    | `/api/auth/me`             | 公开           | 当前用户信息               |
+| GET    | `/api/applications`        | 必填           | 我的申请                   |
+| POST   | `/api/applications`        | 必填           | 提交报名                   |
+| GET    | `/api/applications/:id`    | 必填+归属      | 申请详情                   |
+| PUT    | `/api/applications/:id`    | 必填+归属+锁定 | 修改                       |
+| DELETE | `/api/applications/:id`    | 必填+归属      | 撤销                       |
+| GET    | `/api/stats`               | 公开           | 统计报表                   |
 
 ### 调试示例
 
@@ -127,6 +127,12 @@ curl http://localhost:5173/api/applications   # → 401
 [MOCK] 12:34:58 GET /api/applications → 401 (1ms)
 ```
 
+### 手动验证场景：特殊活动课程额外填写字段
+
+课程列表页（`/courses`）中，点击【年度新技术嘉年华（特殊活动）】卡片上的「立即报名」按钮，报名表单会额外出现「附加信息」分区，包含选择部门（`department`）与选择岗位（`position`）两个必填下拉框。
+
+该 testcase 验证 **特殊活动课程能够增加额外报名填写内容**：普通课程只需基础信息，特殊活动课程可通过 `extraFields` 配置追加自定义必填项，并自动接入表单渲染、校验与预览。
+
 ### 新增一个 mock 接口的标准流程
 
 1. **类型契约**：在 `src/lib/types/` 新增或扩展类型
@@ -144,15 +150,15 @@ curl http://localhost:5173/api/applications   # → 401
 
 ## 开发脚本
 
-| 命令 | 说明 |
-|---|---|
-| `pnpm dev` | 启动开发服务（自动启用 mock） |
-| `pnpm build` | 生产构建 |
+| 命令           | 说明                          |
+| -------------- | ----------------------------- |
+| `pnpm dev`     | 启动开发服务（自动启用 mock） |
+| `pnpm build`   | 生产构建                      |
 | `pnpm preview` | 预览生产构建（默认禁用 mock） |
-| `pnpm check` | svelte-check 类型检查 |
-| `pnpm test` | 运行 Vitest 单元测试 |
-| `pnpm lint` | Prettier + ESLint 检查 |
-| `pnpm format` | Prettier 格式化 |
+| `pnpm check`   | svelte-check 类型检查         |
+| `pnpm test`    | 运行 Vitest 单元测试          |
+| `pnpm lint`    | Prettier + ESLint 检查        |
+| `pnpm format`  | Prettier 格式化               |
 
 ## 技术栈
 

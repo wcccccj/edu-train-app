@@ -1,7 +1,12 @@
 /**
  * 申请业务逻辑 Handler
  */
-import type { Application, ApplicationCreatePayload, ApplicationUpdatePayload, ApplicationQuery } from '$lib/types/application.types';
+import type {
+	Application,
+	ApplicationCreatePayload,
+	ApplicationUpdatePayload,
+	ApplicationQuery
+} from '$lib/types/application.types';
 import type { Page } from '$lib/types/common.types';
 import { applicationStore } from '../store/applications.store';
 import { courseStore } from '../store/courses.store';
@@ -63,7 +68,11 @@ export async function createApplication(
 	// 生成申请记录
 	const app: Application = {
 		...payload,
-		id: `APP${new Date().toISOString().replace(/\D/g, '').slice(0, 14)}${Math.floor(Math.random() * 1000).toString().padStart(3, '0')}`,
+		id: `APP${new Date().toISOString().replace(/\D/g, '').slice(0, 14)}${Math.floor(
+			Math.random() * 1000
+		)
+			.toString()
+			.padStart(3, '0')}`,
 		userId,
 		courseName: course.name,
 		type: course.type,
@@ -83,7 +92,8 @@ export function updateApplication(
 	const app = applicationStore.findById(appId);
 	if (!app) return { ok: false, reason: 'not_found' };
 	if (app.userId !== userId) return { ok: false, reason: 'forbidden' };
-	if (app.status !== 'pending' && app.status !== 'approved') return { ok: false, reason: 'invalid_status' };
+	if (app.status !== 'pending' && app.status !== 'approved')
+		return { ok: false, reason: 'invalid_status' };
 
 	const course = courseStore.findById(app.courseId);
 	if (!course) return { ok: false, reason: 'course_not_found' };
@@ -96,17 +106,14 @@ export function updateApplication(
 	return { ok: true, application: updated! };
 }
 
-export function deleteApplication(
-	userId: string,
-	appId: string
-): { ok: boolean; reason?: string } {
+export function deleteApplication(userId: string, appId: string): { ok: boolean; reason?: string } {
 	const app = applicationStore.findById(appId);
 	if (!app) return { ok: false, reason: 'not_found' };
 	if (app.userId !== userId) return { ok: false, reason: 'forbidden' };
-	
+
 	// 这里简化处理，不限制撤销条件，实际业务可能需要判断状态
 	applicationStore.remove(appId);
-	
+
 	// 注意：理论上撤销需要释放 course 和 location 的 enrolled 容量。
 	// 为了保持 mock 的轻量级，此处不做复杂的级联回退补偿。
 	return { ok: true };

@@ -10,6 +10,12 @@ export const GET: RequestHandler = async (event) => {
 	const start = Date.now();
 	if (!isMockEnabled()) throw error(404, 'Not Found');
 	const user = optionalUser(event);
-	logRequest('GET', event.url.pathname, 200, Date.now() - start, user ? `user=${user.id}` : 'guest');
+	logRequest(
+		'GET',
+		event.url.pathname,
+		200,
+		Date.now() - start,
+		user ? `user=${user.id}` : 'guest'
+	);
 	return ok({ user, isGuest: user === null });
 };

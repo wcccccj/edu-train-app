@@ -13,6 +13,12 @@ export { locationStore } from './store/locations.store';
 export { getCurrentUser, MOCK_USER_HEADER } from './auth/current-user';
 export { requireUser, optionalUser } from './auth/guard';
 export { listCourses, getCourse } from './handlers/course.handler';
-export { listApplications, getApplication, createApplication, updateApplication, deleteApplication } from './handlers/application.handler';
+export {
+	listApplications,
+	getApplication,
+	createApplication,
+	updateApplication,
+	deleteApplication
+} from './handlers/application.handler';
 export { getSchema, registerSchema } from './handlers/schema.handler';
 export { getStatsOverview } from './handlers/stats.handler';

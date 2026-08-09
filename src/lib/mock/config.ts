@@ -8,7 +8,7 @@
  *  - MOCK_ENABLED=false 可在任何环境显式禁用
  */
 export const MOCK_ENABLED: boolean =
-	(process.env.MOCK_ENABLED !== 'false') &&
+	process.env.MOCK_ENABLED !== 'false' &&
 	(import.meta.env.DEV || process.env.MOCK_FORCE === 'true');
 
 export function isMockEnabled(): boolean {
